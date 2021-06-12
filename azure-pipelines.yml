@@ -25,6 +25,6 @@ steps:
     azureSubscription: 'Azure para Estudantes(1)(539b16da-facf-4e9d-8d71-cf3afc727cd7)'
     appType: 'webAppLinux'
     WebAppName: 'tcc-prd-api'
-    packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
+    packageForLinux: '$(System.DefaultWorkingDirectory)'
     RuntimeStack: 'NODE|14-lts'
     StartupCommand: 'node index'
