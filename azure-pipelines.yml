@@ -16,12 +16,12 @@ steps:
   displayName: 'Install Node.js'
 
 - script: |
-    npm run db:migrate
-  displayName: 'Migrate database'
-
-- script: |
     npm ci
   displayName: 'Install node dependencies'
+
+- script: |
+    npm run db:migrate
+  displayName: 'Migrate database'
 
 - task: AzureRmWebAppDeployment@4
   inputs:
