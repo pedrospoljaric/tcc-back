@@ -8,8 +8,6 @@ const router = express.Router()
 
 // const authentication = require('./authentication')
 
-// router
-//     .use('/authentication', authentication)
-//     .use(authenticate)
+router.get('/teste', (req, res) => { res.json({ hello: 'world' }) })
 
 module.exports = router
