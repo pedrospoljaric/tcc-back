@@ -4,9 +4,9 @@
   "description": "TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project.",
   "main": "index.js",
   "scripts": {
-    "db:migration:create": "knex migrate:make --knexfile ./database/knexfile.js",
-    "db:migrate": "knex migrate:latest --knexfile ./database/knexfile.js",
-    "db:migrate:undo": "knex migrate:down --knexfile ./database/knexfile.js",
+    "db:migration:create": "./node_modules/.bin/knex migrate:make --knexfile ./database/knexfile.js",
+    "db:migrate": "./node_modules/.bin/knex migrate:latest --knexfile ./database/knexfile.js",
+    "db:migrate:undo": "./node_modules/.bin/knex migrate:down --knexfile ./database/knexfile.js",
     "db:create": "node ./scripts/createDatabase.js",
     "db:drop": "node ./scripts/dropDatabase.js"
   },

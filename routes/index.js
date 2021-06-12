@@ -8,6 +8,13 @@ const router = express.Router()
 
 // const authentication = require('./authentication')
 
-router.get('/teste', (req, res) => { res.json({ hello: 'world' }) })
+const db = require('../database')
+
+router.get('/teste', async (req, res) => {
+    await db.table('users').insert({ name: req.query.name })
+    const users = await db('users')
+
+    res.json(users)
+})
 
 module.exports = router
