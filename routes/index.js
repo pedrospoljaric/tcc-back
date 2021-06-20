@@ -10,14 +10,13 @@ const router = express.Router()
 
 // const db = require('../database')
 
+const teste = require('../domains/teste')
+
 router.get('/teste', async (req, res) => {
     // await db.table('users').insert({ name: req.query.name })
     // const users = await db('users')
 
-    res.json({
-        dnv: process.env
-        // users
-    })
+    teste(req.query).then(res.json).catch(res.send)
 })
 
 module.exports = router
