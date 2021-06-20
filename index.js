@@ -1,5 +1,6 @@
 require('dotenv').config()
 const express = require('express')
+const path = require('path')
 const routes = require('./routes')
 
 const app = express()
@@ -9,7 +10,7 @@ app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
 
 app.get('/', async (req, res) => {
-    res.sendFile('./pages/index.html')
+    res.sendFile(path.join(__dirname, '/pages/index.html'))
 })
 
 app.use('/api', routes)
