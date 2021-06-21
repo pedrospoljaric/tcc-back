@@ -23,12 +23,10 @@ steps:
 #     npm run db:migrate
 #   displayName: 'Migrate database'
 
-- task: AzureRmWebAppDeployment@4
+- task: PowerShell@2
   inputs:
-    ConnectionType: 'AzureRM'
-    azureSubscription: 'Azure para Estudantes(1)(539b16da-facf-4e9d-8d71-cf3afc727cd7)'
-    appType: 'webAppLinux'
-    WebAppName: 'tcc-api-prd'
-    packageForLinux: '$(System.DefaultWorkingDirectory)'
-    RuntimeStack: 'NODE|14-lts'
-    StartupCommand: 'node index'
+    targetType: 'inline'
+    script: |
+      git checkout $(Build.SourceBranchName)
+      git remote add heroku https://heroku:$(htkn)@git.heroku.com/unifesp-recommendation-back.git
+      git push heroku $(Build.SourceBranchName)
