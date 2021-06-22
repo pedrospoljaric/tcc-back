@@ -63,7 +63,7 @@ module.exports = async ({ username, password }) => {
 
         await page.waitForSelector('form[name=frmHistorico]')
 
-        const headerEntries = await page.$$eval('div .row div', (elements) => elements.map((el) => el.textContent))
+        const headerEntries = await page.$$eval('div .alert .row div', (elements) => elements.map((el) => el.textContent))
 
         const headerData = {}
         headerEntries.forEach((headerEntry) => {
