@@ -15,6 +15,17 @@ app.get('/', async (req, res) => {
 
 app.use('/api', routes)
 
+// eslint-disable-next-line no-unused-vars
+app.use((err, req, res, next) => {
+    res.json({
+        success: false,
+        error: {
+            message: err.message,
+            stack: err.stack
+        }
+    })
+})
+
 app.listen(PORT, () => {
     // eslint-disable-next-line no-console
     console.log(`Server istening on port ${PORT}`)
