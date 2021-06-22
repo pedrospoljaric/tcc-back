@@ -10,7 +10,9 @@ module.exports = async ({ username, password }) => {
     // const browser = await puppeteer.launch({
     //     executablePath: 'D:\\Programas(x86)\\Microsoft\\Edge\\Application\\msedge.exe'
     // })
-    const browser = await puppeteer.launch()
+    const browser = await puppeteer.launch({
+        args: ['--no-sandbox']
+    })
     const page = await browser.newPage()
     await page.goto('http://intranet.unifesp.br')
 
