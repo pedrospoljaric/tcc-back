@@ -5,6 +5,8 @@
 const puppeteer = require('puppeteer')
 const db = require('../../database')
 
+const keyBlacklist = ['Nome', 'CPF', 'RG', 'Órgão Expedidor', 'Email(s)']
+
 module.exports = async ({ username, password }) => {
     if (!username || !password) throw Error('Usuário e/ou senha não fornecidos.')
 
@@ -46,12 +48,14 @@ module.exports = async ({ username, password }) => {
         const element = elements.find((el) => el.textContent === 'Continuar')
         element.setAttribute('target', '_self')
         element.click()
-        return elements.map((element2) => element2.textContent)
+        return elements.map((el) => el.textContent)
     })
 
     const table = await frame.waitForSelector('.tblHistorico tbody')
 
     const recordsUrls = await table.$$eval('a', (records) => records.map((record) => record.getAttribute('href')))
+
+    let user_ra
 
     const records = []
     for (const recordUrl of recordsUrls) {
@@ -59,20 +63,37 @@ module.exports = async ({ username, password }) => {
 
         await page.waitForSelector('form[name=frmHistorico]')
 
+        const headerEntries = await page.$$eval('div .alert span', (elements) => elements.map((el) => el.textContent))
+
+        const headerData = {}
+        headerEntries.forEach((headerEntry) => {
+            const [key, value] = headerEntry.split(': \n')
+            if (!keyBlacklist.includes(key)) headerData[key] = value
+        })
+
         const columns = await page.$$eval('.tblHistorico thead tr th', (elements) => elements.map((column) => column.textContent))
         const record = await page.$$eval('.tblHistorico tbody tr', (lines) => lines.map((line) => line.textContent))
 
-        records.push(record.map((line) => {
-            const obj = {}
-            const attributes = line.replace(/\t/g, '').replace(/^\n/, '').replace(/\n$/, '').split('\n')
-            attributes.forEach((attribute, index) => {
-                obj[columns[index]] = attribute
+        user_ra = headerData['Matricula'], // talvez aplicar SHA1 aqui pra nao armazenar a informacao mas manter possivel de verificar unicidade e identificar quem contribuiu
+
+        records.push({
+            header_data: headerData,
+            entries: record.map((line) => {
+                const obj = {}
+                const attributes = line.replace(/\t/g, '').replace(/^\n/, '').replace(/\n$/, '').split('\n')
+                attributes.forEach((attribute, index) => {
+                    obj[columns[index]] = attribute
+                })
+                return obj
             })
-            return obj
-        }))
+        })
     }
 
-    await db.table('records').insert({ entries: JSON.stringify(records) })
+    await db
+        .table('records')
+        .insert({ user_ra, json_data: JSON.stringify(records) })
+        .onConflict('user_ra')
+        .merge()
 
     return records
 }
