@@ -3,9 +3,12 @@
 /* eslint-disable no-await-in-loop */
 /* eslint-disable no-param-reassign */
 const puppeteer = require('puppeteer')
+const crypto = require('crypto')
 const db = require('../../database')
 
 const keyBlacklist = ['Nome', 'CPF', 'RG', 'Órgão Expedidor', 'Email(s)']
+
+const getSHA256OfString = (str) => crypto.createHash('sha256').update(str).digest('hex')
 
 module.exports = async ({ username, password }) => {
     if (!username || !password) throw Error('Usuário e/ou senha não fornecidos.')
@@ -55,7 +58,7 @@ module.exports = async ({ username, password }) => {
 
     const recordsUrls = await table.$$eval('a', (records) => records.map((record) => record.getAttribute('href')))
 
-    let user_ra
+    let userHash
 
     const records = []
     for (const recordUrl of recordsUrls) {
@@ -68,13 +71,12 @@ module.exports = async ({ username, password }) => {
         const headerData = {}
         headerEntries.forEach((headerEntry) => {
             const [key, value] = headerEntry.split(': ')
+            if (key === 'Matricula') userHash = userHash || getSHA256OfString(value)
             if (!keyBlacklist.includes(key)) headerData[key] = value
         })
 
         const columns = await page.$$eval('.tblHistorico thead tr th', (elements) => elements.map((column) => column.textContent))
         const record = await page.$$eval('.tblHistorico tbody tr', (lines) => lines.map((line) => line.textContent))
-
-        user_ra = headerData['Matricula'], // talvez aplicar SHA1 aqui pra nao armazenar a informacao mas manter possivel de verificar unicidade e identificar quem contribuiu
 
         records.push({
             header_data: headerData,
@@ -91,8 +93,8 @@ module.exports = async ({ username, password }) => {
 
     await db
         .table('records')
-        .insert({ user_ra, json_data: JSON.stringify(records) })
-        .onConflict('user_ra')
+        .insert({ user_hash: userHash, json_data: JSON.stringify(records) })
+        .onConflict('user_hash')
         .merge()
 
     return records
