@@ -72,7 +72,7 @@ module.exports = async ({ username, password }) => {
         }))
     }
 
-    await db.table('records').insert({ entries: records })
+    await db.table('records').insert({ entries: JSON.stringify(records) })
 
     return records
 }
