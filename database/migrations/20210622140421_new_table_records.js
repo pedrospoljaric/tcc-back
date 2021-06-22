@@ -4,7 +4,7 @@ exports.up = async (knex) => {
         table.text('user_hash')
         table.jsonb('json_data')
 
-        table.unique('user_ra')
+        table.unique('user_hash')
     })
 }
 
