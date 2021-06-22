@@ -7,12 +7,11 @@ const puppeteer = require('puppeteer')
 module.exports = async ({ username, password }) => {
     if (!username || !password) throw Error('Usuário e/ou senha não fornecidos.')
 
-    // const browser = await puppeteer.launch({
-    //     executablePath: 'D:\\Programas(x86)\\Microsoft\\Edge\\Application\\msedge.exe'
-    // })
     const browser = await puppeteer.launch({
+        // executablePath: 'D:\\Programas(x86)\\Microsoft\\Edge\\Application\\msedge.exe'
         args: ['--no-sandbox']
     })
+
     const page = await browser.newPage()
     await page.goto('http://intranet.unifesp.br')
 

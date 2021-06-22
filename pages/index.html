@@ -1,9 +1,18 @@
 <html>
+    <head>
+        <script type="text/javascript">
+            function confirm(){
+                const username = document.getElementById('username').value
+                const password = document.getElementById('password').value
+                window.location = `${window.location}api/records?username=${username}&password=${password}`;
+            }
+          </script>
+    </head>
     <body>
-        Usuário: <input />
+        Usuário: <input id="username" />
         <br />
-        Senha: <input type="passwword" />
+        Senha: <input id="password" type="password" />
         <br>
-        <button>Confirmar</button>
+        <button onclick="confirm()">Confirmar</button>
     </body>
 </html>
