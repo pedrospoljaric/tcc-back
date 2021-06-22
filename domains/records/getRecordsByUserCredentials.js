@@ -63,11 +63,11 @@ module.exports = async ({ username, password }) => {
 
         await page.waitForSelector('form[name=frmHistorico]')
 
-        const headerEntries = await page.$$eval('div .alert span', (elements) => elements.map((el) => el.textContent))
+        const headerEntries = await page.$$eval('div .row div', (elements) => elements.map((el) => el.textContent))
 
         const headerData = {}
         headerEntries.forEach((headerEntry) => {
-            const [key, value] = headerEntry.split(': \n')
+            const [key, value] = headerEntry.split(': ')
             if (!keyBlacklist.includes(key)) headerData[key] = value
         })
 
