@@ -77,7 +77,6 @@ module.exports = async ({ username, password }) => {
         user_ra = headerData['Matricula'], // talvez aplicar SHA1 aqui pra nao armazenar a informacao mas manter possivel de verificar unicidade e identificar quem contribuiu
 
         records.push({
-            headerEntries,
             header_data: headerData,
             entries: record.map((line) => {
                 const obj = {}
