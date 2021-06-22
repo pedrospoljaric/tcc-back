@@ -19,9 +19,9 @@ steps:
     npm ci
   displayName: 'Install node dependencies'
 
-# - script: |
-#     npm run db:migrate
-#   displayName: 'Migrate database'
+- script: |
+    npm run db:migrate
+  displayName: 'Migrate database'
 
 - task: PowerShell@2
   inputs:
