@@ -3,6 +3,7 @@
 /* eslint-disable no-await-in-loop */
 /* eslint-disable no-param-reassign */
 const puppeteer = require('puppeteer')
+const db = require('../../database')
 
 module.exports = async ({ username, password }) => {
     if (!username || !password) throw Error('Usuário e/ou senha não fornecidos.')
@@ -70,6 +71,8 @@ module.exports = async ({ username, password }) => {
             return obj
         }))
     }
+
+    await db.table('records').insert({ entries: records })
 
     return records
 }
