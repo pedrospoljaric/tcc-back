@@ -12,7 +12,6 @@ const router = express.Router()
 
 const { getRecordsByUserCredentials } = require('../controllers/records')
 
-router.get('/teste', (req, res) => res.send('oi'))
-router.get('/records', getRecordsByUserCredentials)
+router.post('/records', getRecordsByUserCredentials)
 
 module.exports = router
