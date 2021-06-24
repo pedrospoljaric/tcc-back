@@ -14,8 +14,8 @@ module.exports = async ({ username, password }) => {
     if (!username || !password) throw Error('Usuário e/ou senha não fornecidos.')
 
     const browser = await puppeteer.launch({
-        executablePath: 'D:\\Programas(x86)\\Microsoft\\Edge\\Application\\msedge.exe'
-        // args: ['--no-sandbox']
+        // executablePath: 'D:\\Programas(x86)\\Microsoft\\Edge\\Application\\msedge.exe'
+        args: ['--no-sandbox']
     })
 
     const page = await browser.newPage()
