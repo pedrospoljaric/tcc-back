@@ -1,4 +1,4 @@
-const express = require('express')
+const router = require('./router')
 const { getRecordsByUserCredentials } = require('../controllers/records')
 
 // const {
@@ -8,8 +8,6 @@ const { getRecordsByUserCredentials } = require('../controllers/records')
 // const authentication = require('./authentication')
 
 // const db = require('../database')
-
-const router = express.Router()
 
 router.post('/records', getRecordsByUserCredentials)
 
