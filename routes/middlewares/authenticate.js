@@ -1,6 +1,6 @@
 // const { prop } = require('lodash/fp')
 // const jwt = require('jsonwebtoken')
-// const { APIError } = require('#utils')
+// const { APIError } = require('utils')
 
 // module.exports = async (req, res, next) => {
 //     const token = (prop('headers.authorization', req) || '').split(' ')[1]

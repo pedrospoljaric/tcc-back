@@ -1,5 +1,5 @@
 const express = require('express')
-const { getRecordsByUserCredentials } = require('#controllers/records')
+const { getRecordsByUserCredentials } = require('../controllers/records')
 
 // const {
 //     authenticate

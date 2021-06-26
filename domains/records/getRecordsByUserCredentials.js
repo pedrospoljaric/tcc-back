@@ -4,8 +4,8 @@
 /* eslint-disable no-param-reassign */
 const puppeteer = require('puppeteer')
 const crypto = require('crypto')
-const db = require('#database')
-const { APIError, logError } = require('#utils')
+const db = require('../../database')
+const { APIError, logError } = require('../../utils')
 
 const keyBlacklist = ['Nome', 'Matricula', 'CPF', 'RG', 'Órgão Expedidor', 'Email(s)']
 

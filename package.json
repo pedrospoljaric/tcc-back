@@ -9,8 +9,7 @@
     "db:migrate": "./node_modules/.bin/knex migrate:latest --knexfile ./database/knexfile.js",
     "db:migrate:undo": "./node_modules/.bin/knex migrate:down --knexfile ./database/knexfile.js",
     "db:create": "node ./scripts/createDatabase.js",
-    "db:drop": "node ./scripts/dropDatabase.js",
-    "postinstall": "link-module-alias"
+    "db:drop": "node ./scripts/dropDatabase.js"
   },
   "repository": {
     "type": "git",
@@ -26,7 +25,6 @@
     "express": "4.17.1",
     "jsonwebtoken": "8.5.1",
     "knex": "0.95.6",
-    "link-module-alias": "^1.2.0",
     "lodash": "4.17.21",
     "pg": "8.6.0",
     "puppeteer": "10.0.0",
@@ -36,13 +34,5 @@
     "eslint": "7.28.0",
     "eslint-config-airbnb-base": "14.2.1",
     "eslint-plugin-import": "2.23.4"
-  },
-  "_moduleAliases": {
-    "#domains": "./domains",
-    "#controllers": "./controllers",
-    "#database": "./database",
-    "#routes": "./routes",
-    "#utils": "./utils",
-    "#scripts": "./scripts"
   }
 }
