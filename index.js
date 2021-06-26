@@ -10,6 +10,10 @@ app.use(cors())
 app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
 
+app.get('/teste', (req, res) => { res.json({ message: 'oi' }) })
+app.post('/teste', (req, res) => { res.json({ message: 'oi' }) })
+app.put('/teste', (req, res) => { res.json({ message: 'oi' }) })
+app.delete('/teste', (req, res) => { res.json({ message: 'oi' }) })
 app.use('/api', routes)
 
 // eslint-disable-next-line no-unused-vars
