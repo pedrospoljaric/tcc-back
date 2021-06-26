@@ -1,4 +1,4 @@
-const { prop } = require('lodash/fp/prop')
+const { prop } = require('lodash/fp')
 const { getRecordsByUserCredentials } = require('../../domains/records')
 
 module.exports = (req) => ({
