@@ -7,10 +7,6 @@ const app = express()
 const PORT = process.env.PORT || 1234
 
 app.use(cors())
-app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*')
-    next()
-})
 app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
 
