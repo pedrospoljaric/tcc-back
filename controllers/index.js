@@ -4,7 +4,7 @@ module.exports = (controllerMethod) => async (ctx) => {
 
     try {
         const data = await domainMethod(parameters)
-        return ctx.send({
+        return ctx.send(200, {
             success: true,
             data
         })
