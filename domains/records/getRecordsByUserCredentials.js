@@ -5,34 +5,26 @@
 const puppeteer = require('puppeteer')
 const crypto = require('crypto')
 const db = require('../../database')
+const { APIError } = require('../../utils')
 
-const keyBlacklist = ['Nome', 'CPF', 'RG', 'Órgão Expedidor', 'Email(s)']
+const keyBlacklist = ['Nome', 'Matricula', 'CPF', 'RG', 'Órgão Expedidor', 'Email(s)']
 
 const getSHA256OfString = (str) => crypto.createHash('sha256').update(str).digest('hex')
 
-module.exports = async ({ username, password }) => {
-    if (!username || !password) throw Error('Usuário e/ou senha não fornecidos.')
+const waitForLogin = (page) => new Promise((resolve, reject) => {
+    page.waitForSelector('#logout').then(() => {
+        resolve(true)
+    }).catch(reject)
+    page.waitForNavigation({ waitUntil: 'networkidle2' }).then(() => {
+        if (page.url().includes('loginx=1')) resolve(false)
+    }).catch(reject)
+})
 
-    const browser = await puppeteer.launch({
-        // executablePath: 'D:\\Programas(x86)\\Microsoft\\Edge\\Application\\msedge.exe'
-        args: ['--no-sandbox']
-    })
-
-    const page = await browser.newPage()
-    await page.goto('http://intranet.unifesp.br')
-
-    await page.focus('input[name=username]')
-    await page.keyboard.type(username)
-    await page.focus('input[name=password]')
-    await page.keyboard.type(password)
-    await page.click('input[type=submit]')
-
-    await page.waitForSelector('#logout')
-
+const getUserRecords = async (page) => {
     await page.$$eval('#menuprivado li a', (elements) => {
-        const element = elements.find((eç) => eç.textContent === 'Unifesp')
+        const element = elements.find((el) => el.textContent === 'Unifesp')
         element.click()
-        return elements.map((element2) => element2.textContent)
+        return elements.map((el) => el.textContent)
     })
 
     await page.waitForSelector('#tbCorpoVisual')
@@ -40,7 +32,7 @@ module.exports = async ({ username, password }) => {
     await page.$$eval('#tbCorpoVisual tbody tr td a', (elements) => {
         const element = elements.find((el) => el.textContent === '\n\nHistórico Acadêmico On Line (Visualizar no Google Chrome ou IE)')
         element.click()
-        return elements.map((element2) => element2.textContent)
+        return elements.map((el) => el.textContent)
     })
 
     const elementHandle = await page.waitForSelector('#iframe iframe')
@@ -96,6 +88,33 @@ module.exports = async ({ username, password }) => {
         .insert({ user_hash: userHash, json_data: JSON.stringify(records) })
         .onConflict('user_hash')
         .merge()
+}
 
-    return records
+module.exports = async ({ username, password }) => {
+    if (!username || !password) throw Error('Usuário e/ou senha não fornecidos.')
+
+    let loginResult
+    let page
+    try {
+        const browser = await puppeteer.launch({
+            // executablePath: 'D:\\Programas(x86)\\Microsoft\\Edge\\Application\\msedge.exe'
+            args: ['--no-sandbox']
+        })
+
+        page = await browser.newPage()
+        await page.goto('http://intranet.unifesp.br')
+
+        await page.focus('input[name=username]')
+        await page.keyboard.type(username)
+        await page.focus('input[name=password]')
+        await page.keyboard.type(password)
+        await page.click('input[type=submit]')
+
+        loginResult = await waitForLogin(page)
+    } catch (err) {
+        throw APIError(`Falha ao autenticar ${username}. Tente novamente mais tarde.`, 503)
+    }
+    if (!loginResult) throw APIError('Usuário e/ou senha incorretos.', 401)
+
+    getUserRecords(page)
 }
