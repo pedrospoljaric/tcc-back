@@ -1,19 +1,26 @@
-const express = require('express')
+const KoaRouter = require('koa-router')
 const controller = require('../controllers')
 
-const router = express.Router()
-
-module.exports = {
+class Router extends KoaRouter {
     get(path, ...methods) {
-        return router.get(path, ...methods.slice(0, methods.length - 1), controller(methods[methods.length - 1]))
-    },
+        super.get(path, ...methods.slice(0, methods.length - 1), controller(methods[methods.length - 1]))
+        return this
+    }
+
     post(path, ...methods) {
-        return router.post(path, ...methods.slice(0, methods.length - 1), controller(methods[methods.length - 1]))
-    },
+        super.post(path, ...methods.slice(0, methods.length - 1), controller(methods[methods.length - 1]))
+        return this
+    }
+
     put(path, ...methods) {
-        return router.put(path, ...methods.slice(0, methods.length - 1), controller(methods[methods.length - 1]))
-    },
+        super.put(path, ...methods.slice(0, methods.length - 1), controller(methods[methods.length - 1]))
+        return this
+    }
+
     delete(path, ...methods) {
-        return router.delete(path, ...methods.slice(0, methods.length - 1), controller(methods[methods.length - 1]))
+        super.delete(path, ...methods.slice(0, methods.length - 1), controller(methods[methods.length - 1]))
+        return this
     }
 }
+
+module.exports = Router
