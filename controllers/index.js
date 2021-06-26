@@ -3,6 +3,7 @@ module.exports = (controllerMethod) => async (req, res, next) => {
 
     try {
         const data = await domainMethod(parameters)
+        res.header('Access-Control-Allow-Origin', '*')
         return res.json(200, {
             success: true,
             data
