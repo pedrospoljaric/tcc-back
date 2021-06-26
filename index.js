@@ -7,6 +7,7 @@ const app = express()
 const PORT = process.env.PORT || 1234
 
 app.use(cors())
+app.options(cors())
 app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
 
