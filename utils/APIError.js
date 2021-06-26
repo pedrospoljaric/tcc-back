@@ -1,4 +1,4 @@
-const db = require('../database')
+const logError = require('./logError')
 
 const errorCodes = {
     400: 'BadRequest',
@@ -13,7 +13,7 @@ module.exports = (message, code = 500) => {
     error.name = errorCodes[code]
 
     if (code >= 500) {
-        db.table('error_logs').insert({ message: JSON.stringify(error) }).then()
+        logError(error)
     }
 
     return error

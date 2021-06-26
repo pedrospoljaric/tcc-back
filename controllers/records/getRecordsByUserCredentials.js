@@ -1,7 +1,10 @@
-const { prop } = require('lodash/fp')
-const getRecordsByUserCredentials = require('../../domains/records/getRecordsByUserCredentials')
+const { prop } = require('lodash/fp/prop')
+const { getRecordsByUserCredentials } = require('#domains/records')
 
-module.exports = (req, res, next) => getRecordsByUserCredentials({
-    username: prop('body.username', req),
-    password: prop('body.password', req)
-}).then((data) => res.json({ success: true, data })).catch(next)
+module.exports = (req) => ({
+    method: getRecordsByUserCredentials,
+    parameters: {
+        username: prop('body.username', req),
+        password: prop('body.password', req)
+    }
+})
