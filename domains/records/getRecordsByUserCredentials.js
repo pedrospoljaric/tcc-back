@@ -116,7 +116,7 @@ module.exports = async ({ username, password }) => {
 
         loginResult = await waitForLogin(page)
     } catch (err) {
-        throw APIError(`Falha ao autenticar ${username}. Tente novamente mais tarde.`, 503)
+        throw APIError(`Falha ao autenticar ${username}. Tente novamente mais tarde. ${JSON.stringify(err)}`, 503)
     }
     if (!loginResult) throw APIError('Usuário e/ou senha incorretos.', 401)
 
