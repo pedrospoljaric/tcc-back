@@ -19,6 +19,10 @@ steps:
     npm ci
   displayName: 'Install node dependencies'
 
+- script: |
+    npm run db:migrate
+  displayName: 'Migrate database'
+
 - task: AzureRmWebAppDeployment@4
   inputs:
     ConnectionType: 'AzureRM'
@@ -27,4 +31,4 @@ steps:
     WebAppName: 'tcc-api-prd'
     packageForLinux: '$(System.DefaultWorkingDirectory)'
     RuntimeStack: 'NODE|14-lts'
-    StartupCommand: 'npm run db:migrate && node index'
+    StartupCommand: 'node index'
