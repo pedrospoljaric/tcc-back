@@ -4,6 +4,7 @@ ENV PATH /app/node_modules/.bin:$PATH
 COPY package.json ./
 COPY package-lock.json ./
 
+RUN dpkg --add-architecture i386
 RUN apt-get update
 RUN apt-get install -y wget gnupg
 RUN apt-get install libgtk2.0-0:i386
