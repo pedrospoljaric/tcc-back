@@ -95,7 +95,7 @@ const getUserRecords = async (page) => {
 }
 
 module.exports = async ({ username, password }) => {
-    if (!username || !password) throw Error('Usuário e/ou senha não fornecidos.')
+    if (!username || !password) throw APIError('Usuário e/ou senha não fornecidos.', 400)
 
     let loginResult
     let page
