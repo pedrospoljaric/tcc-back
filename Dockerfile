@@ -20,7 +20,7 @@ RUN npm install
 RUN groupadd -r pptruser && useradd -r -g pptruser -G audio,video pptruser
 RUN mkdir -p /home/pptruser/Downloads
 RUN chown -R pptruser:pptruser /home/pptruser
-RUN chown -R pptruser:pptruser /node_modules
+RUN chown -R pptruser:pptruser ./node_modules
 
 USER pptruser
 
