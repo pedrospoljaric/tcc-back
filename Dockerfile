@@ -19,4 +19,6 @@ RUN npm install \
 
 USER pptruser
 
+EXPOSE 1234
+
 CMD ["npm", "start"]
