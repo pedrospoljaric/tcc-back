@@ -102,7 +102,8 @@ module.exports = async ({ username, password }) => {
     try {
         const browser = await puppeteer.launch({
             // executablePath: 'D:\\Programas(x86)\\Microsoft\\Edge\\Application\\msedge.exe'
-            args: ['--no-sandbox']
+            executablePath: '/usr/bin/chromium-browser',
+            args: ['--no-sandbox', '--headless', '--disable-gpu']
         })
 
         page = await browser.newPage()
