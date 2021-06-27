@@ -1,8 +1,6 @@
 FROM node
-WORKDIR /app
-ENV PATH /app/node_modules/.bin:$PATH
-COPY package.json ./
-COPY package-lock.json ./
+
+COPY . .
 
 RUN apt-get update \
     && apt-get install -y wget gnupg \
@@ -21,5 +19,4 @@ RUN npm install \
 
 USER pptruser
 
-COPY . /app
 CMD ["npm", "start"]
