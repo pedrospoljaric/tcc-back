@@ -20,8 +20,24 @@ const waitForLogin = (page) => new Promise((resolve, reject) => {
     }).catch(reject)
 })
 
-const getUserRecords = async (page) => {
+const getUserRecords = async ({ username, password }) => {
     try {
+        const browser = await puppeteer.launch({
+            // executablePath: 'D:\\Programas(x86)\\Microsoft\\Edge\\Application\\msedge.exe'
+            args: ['--no-sandbox']
+        })
+
+        const page = await browser.newPage()
+        await page.goto('http://intranet.unifesp.br')
+
+        await page.focus('input[name=username]')
+        await page.keyboard.type(username)
+        await page.focus('input[name=password]')
+        await page.keyboard.type(password)
+        await page.click('input[type=submit]')
+
+        await waitForLogin(page)
+
         await page.$$eval('#menuprivado li a', (elements) => {
             const element = elements.find((el) => el.textContent === 'Unifesp')
             element.click()
@@ -94,6 +110,28 @@ const getUserRecords = async (page) => {
     }
 }
 
+const queue = []
+let running = false
+
+const emptyQueue = async () => {
+    if (!running) {
+        running = true
+        while (queue.length) {
+            await getUserRecords(queue.shift())
+        }
+        running = false
+    }
+}
+
+const enqueue = async (item) => {
+    queue.push(item)
+    emptyQueue()
+}
+
+setInterval(() => {
+    if (!running && queue.length) emptyQueue()
+}, 1800000)
+
 module.exports = async ({ username, password }) => {
     if (!username || !password) throw APIError('Usuário e/ou senha não fornecidos.', 400)
 
@@ -102,8 +140,7 @@ module.exports = async ({ username, password }) => {
     try {
         const browser = await puppeteer.launch({
             // executablePath: 'D:\\Programas(x86)\\Microsoft\\Edge\\Application\\msedge.exe'
-            executablePath: '/usr/bin/chromium-browser',
-            args: ['--no-sandbox', '--headless', '--disable-gpu']
+            args: ['--no-sandbox']
         })
 
         page = await browser.newPage()
@@ -121,5 +158,5 @@ module.exports = async ({ username, password }) => {
     }
     if (!loginResult) throw APIError('Usuário e/ou senha incorretos.', 401)
 
-    getUserRecords(page)
+    await enqueue({ username, password })
 }
