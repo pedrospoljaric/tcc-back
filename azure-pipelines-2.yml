@@ -20,11 +20,14 @@ stages:
     pool:
       vmImage: ubuntu-latest
     steps:
-    - task: Docker@2
-      displayName: Build an image
+    - task: AzureRmWebAppDeployment@4
       inputs:
-        command: build
-        dockerfile: '**/Dockerfile'
-        tags: |
-          $(tag)
+        ConnectionType: 'AzureRM'
+        azureSubscription: 'Azure para Estudantes(1)(539b16da-facf-4e9d-8d71-cf3afc727cd7)'
+        appType: 'webAppContainer'
+        WebAppName: 'tcc-api-prd-docker'
+        DockerNamespace: 'unifesprecommendationapi.azurecr.io'
+        DockerRepository: 'back'
+        DockerImageTag: 'latest'
+        StartupCommand: 'npm start'
 
