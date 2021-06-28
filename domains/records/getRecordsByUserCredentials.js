@@ -173,7 +173,8 @@ const responses = {}
 
 const getResponse = (requestId) => async ({ username, password }) => {
     try {
-        const loginResult = await enqueueCredentialsCheck({ username, password })
+        // const loginResult = await enqueueCredentialsCheck({ username, password })
+        const loginResult = await checkCredentials({ username, password })
         if (!loginResult) {
             responses[requestId] = {
                 success: false,
