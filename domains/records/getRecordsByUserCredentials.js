@@ -21,8 +21,9 @@ const waitForLogin = (page) => new Promise((resolve, reject) => {
 })
 
 const getUserRecords = async ({ username, password }) => {
+    let browser
     try {
-        const browser = await puppeteer.launch({
+        browser = await puppeteer.launch({
             // executablePath: 'D:\\Programas(x86)\\Microsoft\\Edge\\Application\\msedge.exe'
             args: ['--no-sandbox']
         })
@@ -105,40 +106,22 @@ const getUserRecords = async ({ username, password }) => {
             .insert({ user_hash: userHash, json_data: JSON.stringify(records) })
             .onConflict('user_hash')
             .merge()
+        await browser.close()
     } catch (err) {
         logError(err)
+        await browser.close()
     }
 }
 
-const queue = []
-let running = false
+const getRecordsQueue = []
+let getRecordsQueueBusy = false
 
-const emptyQueue = async () => {
-    if (!running) {
-        running = true
-        while (queue.length) {
-            await getUserRecords(queue.shift())
-        }
-        running = false
-    }
-}
-
-const enqueue = async (item) => {
-    queue.push(item)
-    emptyQueue()
-}
-
-setInterval(() => {
-    if (!running && queue.length) emptyQueue()
-}, 1800000)
-
-module.exports = async ({ username, password }) => {
-    if (!username || !password) throw APIError('Usuário e/ou senha não fornecidos.', 400)
-
+const checkCredentials = async ({ username, password }) => {
     let loginResult
     let page
+    let browser
     try {
-        const browser = await puppeteer.launch({
+        browser = await puppeteer.launch({
             // executablePath: 'D:\\Programas(x86)\\Microsoft\\Edge\\Application\\msedge.exe'
             args: ['--no-sandbox']
         })
@@ -153,10 +136,40 @@ module.exports = async ({ username, password }) => {
         await page.click('input[type=submit]')
 
         loginResult = await waitForLogin(page)
+
+        await browser.close()
+        return loginResult
     } catch (err) {
+        await browser.close()
         throw APIError(`Falha ao autenticar ${username}. Tente novamente mais tarde. ${JSON.stringify(err, Object.getOwnPropertyNames(err))}`, 503)
     }
+}
+
+let credentialQueueBusy = false
+const credentialCheckQueue = []
+
+setInterval(() => {
+    if (!credentialQueueBusy && credentialCheckQueue.length) {
+        credentialQueueBusy = true
+        const { credentials, resolve, reject } = credentialCheckQueue.shift()
+        checkCredentials(credentials).then(resolve).catch(reject).finally(() => { credentialQueueBusy = false })
+    }
+    if (!getRecordsQueueBusy && getRecordsQueue.length) {
+        getRecordsQueueBusy = true
+        const { credentials } = getRecordsQueue.shift()
+        getUserRecords(credentials).finally(() => { getRecordsQueueBusy = false })
+    }
+}, 1000)
+
+const enqueueCredentialsCheck = (credentials) => new Promise((resolve, reject) => {
+    credentialCheckQueue.push({ credentials, resolve, reject })
+})
+
+module.exports = async ({ username, password }) => {
+    if (!username || !password) throw APIError('Usuário e/ou senha não fornecidos.', 400)
+
+    const loginResult = await enqueueCredentialsCheck({ username, password })
     if (!loginResult) throw APIError('Usuário e/ou senha incorretos.', 401)
 
-    await enqueue({ username, password })
+    getRecordsQueue.push({ username, password })
 }
