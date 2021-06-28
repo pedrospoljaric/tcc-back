@@ -7,10 +7,11 @@ const errorCodes = {
     404: 'NotFound'
 }
 
-module.exports = (message, code = 500) => {
+module.exports = (message, code = 500, data) => {
     const error = new Error(message)
     error.status = code
     error.name = errorCodes[code]
+    error.data = data
 
     if (code >= 500) {
         logError(error)
