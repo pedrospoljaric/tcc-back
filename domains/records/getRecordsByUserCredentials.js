@@ -197,6 +197,8 @@ const makeRequest = async ({ username, password }) => {
 
     const requestId = makeId(10)
     getResponse(requestId)
+
+    return requestId
 }
 
 const checkResponse = async ({ requestId }) => {
