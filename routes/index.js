@@ -1,6 +1,7 @@
 const Router = require('./router')
-const { getRecordsByUserCredentials } = require('../controllers/records')
+const { getRecordsByUserCredentials, checkResponse } = require('../controllers/records')
 
 module.exports = new Router()
     .post('/records', getRecordsByUserCredentials)
+    .post('/responses/:requestId', checkResponse)
     .routes()

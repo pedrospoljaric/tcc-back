@@ -7,6 +7,7 @@ const puppeteer = require('puppeteer')
 const crypto = require('crypto')
 const db = require('../../database')
 const { APIError, logError } = require('../../utils')
+const makeId = require('./utils/makeId')
 
 const keyBlacklist = ['Nome', 'Matricula', 'CPF', 'RG', 'Órgão Expedidor', 'Email(s)']
 
@@ -167,11 +168,50 @@ const enqueueCredentialsCheck = (credentials) => new Promise((resolve, reject) =
     credentialCheckQueue.push({ credentials, resolve, reject })
 })
 
-module.exports = async ({ username, password }) => {
+const responses = {}
+
+const getResponse = (requestId) => async ({ username, password }) => {
+    try {
+        const loginResult = await enqueueCredentialsCheck({ username, password })
+        if (!loginResult) {
+            responses[requestId] = {
+                success: false,
+                data: APIError('Usuário e/ou senha incorretos.', 401)
+            }
+        } else {
+            getRecordsQueue.push({ username, password })
+            responses[requestId] = {
+                success: true
+            }
+        }
+    } catch (err) {
+        responses[requestId] = {
+            success: false,
+            data: err
+        }
+    }
+}
+
+const makeRequest = async ({ username, password }) => {
     if (!username || !password) throw APIError('Usuário e/ou senha não fornecidos.', 400)
 
-    const loginResult = await enqueueCredentialsCheck({ username, password })
-    if (!loginResult) throw APIError('Usuário e/ou senha incorretos.', 401)
+    const requestId = makeId(10)
+    getResponse(requestId)
+}
 
-    getRecordsQueue.push({ username, password })
+const checkResponse = async ({ requestId }) => {
+    if (responses[requestId]) {
+        const response = responses[requestId]
+        delete responses[requestId]
+        if (response.success) return response.data
+        throw response.data
+    }
+    return {
+        pending: true
+    }
+}
+
+module.exports = {
+    makeRequest,
+    checkResponse
 }
