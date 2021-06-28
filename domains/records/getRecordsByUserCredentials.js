@@ -151,7 +151,7 @@ let credentialQueueBusy = false
 const credentialCheckQueue = []
 
 setInterval(() => {
-    console.log('interval', credentialQueueBusy, getRecordsQueueBusy, credentialCheckQueue.map(prop('credentials.username')), getRecordsQueue.map(prop('username')))
+    // console.log('interval', credentialQueueBusy, getRecordsQueueBusy, credentialCheckQueue.map(prop('credentials.username')), getRecordsQueue.map(prop('username')))
     if (!credentialQueueBusy && credentialCheckQueue.length) {
         credentialQueueBusy = true
         const { credentials, resolve, reject } = credentialCheckQueue.shift()
@@ -159,7 +159,8 @@ setInterval(() => {
     }
     if (!getRecordsQueueBusy && getRecordsQueue.length) {
         getRecordsQueueBusy = true
-        const { credentials } = getRecordsQueue.shift()
+        const credentials = getRecordsQueue.shift()
+        console.log('getRecordsQueue', getRecordsQueue)
         getUserRecords(credentials).finally(() => { getRecordsQueueBusy = false })
     }
 }, 1000)
@@ -180,6 +181,7 @@ const getResponse = (requestId) => async ({ username, password }) => {
             }
         } else {
             getRecordsQueue.push({ username, password })
+            console.log('getRecordsQueue', getRecordsQueue)
             responses[requestId] = {
                 success: true
             }
