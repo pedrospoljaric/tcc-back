@@ -4,6 +4,6 @@ const { getRecordsByUserCredentials } = require('../../domains/records')
 module.exports = (ctx) => ({
     method: getRecordsByUserCredentials.checkResponse,
     parameters: {
-        requestId: prop('query.requestId', ctx)
+        requestId: prop('params.requestId', ctx)
     }
 })
