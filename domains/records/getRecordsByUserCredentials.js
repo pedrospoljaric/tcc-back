@@ -2,6 +2,7 @@
 /* eslint-disable no-loop-func */
 /* eslint-disable no-await-in-loop */
 /* eslint-disable no-param-reassign */
+const { prop } = require('lodash/fp')
 const puppeteer = require('puppeteer')
 const crypto = require('crypto')
 const db = require('../../database')
@@ -149,10 +150,11 @@ let credentialQueueBusy = false
 const credentialCheckQueue = []
 
 setInterval(() => {
+    console.log('interval', credentialQueueBusy, getRecordsQueueBusy, credentialCheckQueue.map(prop('credentials.username')), getRecordsQueue.map(prop('username')))
     if (!credentialQueueBusy && credentialCheckQueue.length) {
         credentialQueueBusy = true
         const { credentials, resolve, reject } = credentialCheckQueue.shift()
-        checkCredentials(credentials).finally(() => { credentialQueueBusy = false })
+        checkCredentials(credentials).then(resolve).catch(reject).finally(() => { credentialQueueBusy = false })
     }
     if (!getRecordsQueueBusy && getRecordsQueue.length) {
         getRecordsQueueBusy = true
