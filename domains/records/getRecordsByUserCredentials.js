@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable no-loop-func */
 /* eslint-disable no-await-in-loop */
@@ -160,7 +161,7 @@ setInterval(() => {
     if (!getRecordsQueueBusy && getRecordsQueue.length) {
         getRecordsQueueBusy = true
         const credentials = getRecordsQueue.shift()
-        console.log('getRecordsQueue', getRecordsQueue)
+        console.log('getRecordsQueue', getRecordsQueue.map(prop('username')))
         getUserRecords(credentials).finally(() => { getRecordsQueueBusy = false })
     }
 }, 1000)
