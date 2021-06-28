@@ -143,7 +143,7 @@ const checkCredentials = async ({ username, password }) => {
         return loginResult
     } catch (err) {
         if (browser) await browser.close()
-        throw APIError(`Falha ao autenticar ${username}. Tente novamente mais tarde. ${JSON.stringify(err, Object.getOwnPropertyNames(err))}`, 503)
+        throw APIError(`Falha ao autenticar. Tente novamente mais tarde. ${JSON.stringify(err, Object.getOwnPropertyNames(err))}`, 503)
     }
 }
 
@@ -181,7 +181,7 @@ const getResponse = (requestId) => async ({ username, password }) => {
             }
         } else {
             getRecordsQueue.push({ username, password })
-            console.log('getRecordsQueue', getRecordsQueue)
+            console.log('getRecordsQueue', getRecordsQueue.map(prop('username')))
             responses[requestId] = {
                 success: true
             }
