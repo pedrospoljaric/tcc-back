@@ -3,5 +3,5 @@ const { getRecordsByUserCredentials, checkResponse } = require('../controllers/r
 
 module.exports = new Router()
     .post('/records', getRecordsByUserCredentials)
-    .post('/responses/:requestId', checkResponse)
+    .get('/responses/:requestId', checkResponse)
     .routes()
