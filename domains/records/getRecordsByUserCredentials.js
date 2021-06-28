@@ -196,7 +196,7 @@ const makeRequest = async ({ username, password }) => {
     if (!username || !password) throw APIError('Usuário e/ou senha não fornecidos.', 400)
 
     const requestId = makeId(10)
-    getResponse(requestId)
+    getResponse(requestId)({ username, password })
 
     return requestId
 }
