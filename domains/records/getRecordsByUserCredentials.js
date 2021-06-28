@@ -109,7 +109,7 @@ const getUserRecords = async ({ username, password }) => {
         await browser.close()
     } catch (err) {
         logError(err)
-        await browser.close()
+        if (browser) await browser.close()
     }
 }
 
@@ -140,7 +140,7 @@ const checkCredentials = async ({ username, password }) => {
         await browser.close()
         return loginResult
     } catch (err) {
-        await browser.close()
+        if (browser) await browser.close()
         throw APIError(`Falha ao autenticar ${username}. Tente novamente mais tarde. ${JSON.stringify(err, Object.getOwnPropertyNames(err))}`, 503)
     }
 }
@@ -152,7 +152,7 @@ setInterval(() => {
     if (!credentialQueueBusy && credentialCheckQueue.length) {
         credentialQueueBusy = true
         const { credentials, resolve, reject } = credentialCheckQueue.shift()
-        checkCredentials(credentials).then(resolve).catch(reject).finally(() => { credentialQueueBusy = false })
+        checkCredentials(credentials).finally(() => { credentialQueueBusy = false })
     }
     if (!getRecordsQueueBusy && getRecordsQueue.length) {
         getRecordsQueueBusy = true
