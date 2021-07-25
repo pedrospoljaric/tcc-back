@@ -19,7 +19,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@koa/multer": "3.0.0",
     "dotenv": "10.0.0",
+    "exceljs": "^4.2.1",
     "jsonwebtoken": "8.5.1",
     "kcors": "2.2.2",
     "knex": "0.95.6",
@@ -30,6 +32,7 @@
     "koa-respond": "2.1.0",
     "koa-router": "10.0.0",
     "lodash": "4.17.21",
+    "multer": "1.4.2",
     "pg": "8.6.0",
     "puppeteer": "10.0.0",
     "puppeteer-core": "10.0.0"

@@ -125,7 +125,7 @@ const checkCredentials = async ({ username, password }) => {
     let browser
     try {
         browser = await puppeteer.launch({
-            // executablePath: 'D:\\Programas(x86)\\Microsoft\\Edge\\Application\\msedge.exe'
+            executablePath: 'D:\\Programas(x86)\\Microsoft\\Edge\\Application\\msedge.exe',
             args: ['--no-sandbox']
         })
 

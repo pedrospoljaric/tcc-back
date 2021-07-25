@@ -1,0 +1,8 @@
+Importar disciplinas, turmas, horários e professores da tabela
+Verificar "cada um" porque os nomes não são muito bem escritos
+Verificação:
+Verificar sempre que aparecer uma UC nova (#UCs verificações iniciais antes de aparecerem erros)
+Verificar sempre que aparecer um horário novo (#horários verificações iniciais antes de aparecerem erros)
+Verificar sempre que aparecer uma turma com nome novo (#nomes_turmas verificações iniciais antes de aparecerem erros)
+Verificar sempre que aparecer um professor com nome novo (#nomes_professores verificações iniciais antes de aparecerem erros)
+Itens repetidos são verificados automaticamente
