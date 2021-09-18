@@ -1,10 +1,9 @@
 const { multer } = require('./middlewares')
-const Router = require('./router')
+const app = require('./router')()
 
 const {
     importClassGrid
 } = require('../controllers/classGrids')
 
-module.exports = new Router()
+module.exports = app
     .post('/import', multer('file'), importClassGrid)
-    .routes()
