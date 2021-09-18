@@ -1,8 +1,8 @@
-const app = require('./router')()
+const app = require('express')()
 
 app
-    .getRaw('/', (req, res) => {
-        res.end('ok')
+    .get('/', (req, res) => {
+        res.end('healthy')
     })
 
 module.exports = app

@@ -2,6 +2,6 @@ const app = require('express')()
 const health = require('./health')
 
 app
-    .get('/api/health', (req, res) => { res.send('oi') })
+    .use('/api/health', health)
 
 module.exports = app

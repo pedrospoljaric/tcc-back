@@ -9,7 +9,7 @@ const PORT = process.env.PORT || 1234
 app
     .use(express.json())
     .use(express.urlencoded({ extended: true }))
-    .use('/api', routes)
+    .use(routes)
 
 // eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {
