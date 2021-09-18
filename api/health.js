@@ -1,7 +1,7 @@
 const app = require('./router')()
 
 app
-    .get('/', (req, res) => {
+    .getRaw('/', (req, res) => {
         res.end('ok')
     })
 
