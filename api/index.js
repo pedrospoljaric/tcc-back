@@ -1,5 +1,7 @@
 const app = require('./router')()
 const health = require('./health')
 
-module.exports = app
+app
     .get('/api/health', health)
+
+module.exports = app

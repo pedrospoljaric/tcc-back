@@ -1,6 +1,8 @@
 const app = require('./router')()
 
-module.exports = app
+app
     .get('/', (req, res) => {
         res.end('ok')
     })
+
+module.exports = app
