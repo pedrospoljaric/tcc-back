@@ -6,4 +6,7 @@ module.exports = new Router()
     .use('/grids', classGrids)
     .post('/records', getRecordsByUserCredentials)
     .get('/responses/:requestId', checkResponse)
+    .get('/health', (ctx) => {
+        ctx.send('ok')
+    })
     .routes()
