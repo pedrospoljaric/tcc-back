@@ -1,7 +1,4 @@
-const Router = require('./router')
-
-module.exports = new Router()
-    .get('/', (ctx) => {
-        ctx.send('ok')
-    })
-    .routes()
+module.exports = (req, res) => {
+    const { name = 'World' } = req.query
+    res.send(`Hello ${name}!`)
+}
