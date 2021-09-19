@@ -1,7 +1,7 @@
 const app = require('express')()
 
 app
-    .get('/', (req, res) => {
+    .get('/api/health', (req, res) => {
         res.end('healthy')
     })
 
