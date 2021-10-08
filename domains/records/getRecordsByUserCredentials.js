@@ -6,7 +6,7 @@
 const { prop } = require('lodash/fp')
 const puppeteer = require('puppeteer')
 const crypto = require('crypto')
-const db = require('../../database')
+const db = require('#database')
 const { APIError, logError } = require('../../utils')
 const makeId = require('./utils/makeId')
 

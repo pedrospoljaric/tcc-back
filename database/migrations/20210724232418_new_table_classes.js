@@ -4,7 +4,6 @@ exports.up = async (knex) => {
         table.text('name').notNullable()
         table.integer('discipline_id').notNullable()
         table.integer('semester_id').notNullable()
-        table.boolean('verified').notNullable().defaultsTo(false)
 
         table.foreign('discipline_id').references('id').on('disciplines')
         table.foreign('semester_id').references('id').on('semesters')

@@ -1,9 +1,9 @@
 const { prop } = require('lodash/fp')
-const { importClassGrid } = require('../../domains/classGrids')
+const { importClassGrid } = require('#domains/classGrids')
 
-module.exports = (req) => ({
+module.exports = (ctx) => ({
     method: importClassGrid,
     parameters: {
-        file: prop('file', req)
+        file: prop('file', ctx)
     }
 })

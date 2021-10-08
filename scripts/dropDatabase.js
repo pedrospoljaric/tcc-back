@@ -1,3 +1,4 @@
+require('dotenv').config()
 const knex = require('knex')({
     client: 'pg',
     connection: {
@@ -10,7 +11,7 @@ const knex = require('knex')({
 
 (async () => {
     try {
-        await knex.raw(`DROP DATABASE ${process.env.DATABASE}`)
+        await knex.raw(`DROP DATABASE ${process.env.DB_NAME}`)
         knex.destroy()
     } catch (err) {
         knex.destroy()

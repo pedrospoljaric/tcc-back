@@ -1,10 +1,12 @@
+const disciplinesNames = require('./fixtures/disciplinesNames.json')
+
 exports.up = async (knex) => {
     await knex.schema.createTable('disciplines', (table) => {
         table.increments()
-        table.text('name').notNullable()
-        table.specificType('aliases', 'TEXT ARRAY').notNullable()
-        table.boolean('verified').notNullable().defaultsTo(false)
+        table.text('name').notNullable().unique()
     })
+
+    await knex.table('disciplines').insert(disciplinesNames.map((disciplineName) => ({ name: disciplineName }))).onConflict('name').ignore()
 }
 
 exports.down = async (knex) => {

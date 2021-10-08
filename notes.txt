@@ -6,3 +6,5 @@ Verificar sempre que aparecer um horário novo (#horários verificações inicia
 Verificar sempre que aparecer uma turma com nome novo (#nomes_turmas verificações iniciais antes de aparecerem erros)
 Verificar sempre que aparecer um professor com nome novo (#nomes_professores verificações iniciais antes de aparecerem erros)
 Itens repetidos são verificados automaticamente
+
+mesma turma = mesma disciplina, mesmo nome de turma, mesmo semestre

@@ -1,9 +1,9 @@
 const { prop } = require('lodash/fp')
-const { getRecordsByUserCredentials } = require('../../domains/records')
+const { getRecordsByUserCredentials } = require('#domains/records')
 
-module.exports = (req) => ({
+module.exports = (ctx) => ({
     method: getRecordsByUserCredentials.checkResponse,
     parameters: {
-        requestId: prop('params.requestId', req)
+        requestId: prop('params.requestId', ctx)
     }
 })

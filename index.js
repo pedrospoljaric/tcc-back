@@ -1,15 +1,17 @@
 require('dotenv').config()
 const express = require('express')
-const routes = require('./api')
+const cors = require('cors')
+const routes = require('./routes')
 
 const app = express()
 
 const PORT = process.env.PORT || 1234
 
 app
+    .use(cors())
     .use(express.json())
     .use(express.urlencoded({ extended: true }))
-    .use(routes)
+    .use('/api', routes)
 
 // eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {
