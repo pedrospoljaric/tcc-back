@@ -1,22 +1,25 @@
 require('dotenv').config()
-const express = require('express')
-const cors = require('cors')
+const Koa = require('koa')
+const bodyParser = require('koa-bodyparser')
+const cors = require('kcors')
+const mount = require('koa-mount')
+const respond = require('koa-respond')
 const routes = require('./routes')
 
-const app = express()
+const app = new Koa()
+require('koa-qs')(app)
 
 const PORT = process.env.PORT || 1234
 
 app
-    .use(cors())
-    .use(express.json())
-    .use(express.urlencoded({ extended: true }))
-    .use('/api', routes)
+    .use(respond())
+    .use(cors({ origin: '*' }))
+    .use(bodyParser(({ formLimit: '10mb', jsonLimit: '10mb', urlencoded: { extended: true } })))
+    .use(mount('/api', routes))
 
-// eslint-disable-next-line no-unused-vars
-app.use((err, req, res, next) => {
+app.on('error', (err, ctx) => {
     const errorCode = err.status || 500
-    res.status(errorCode).send({
+    ctx.send(errorCode, {
         success: false,
         error: {
             status: errorCode,
@@ -28,5 +31,5 @@ app.use((err, req, res, next) => {
 
 app.listen(PORT, () => {
     // eslint-disable-next-line no-console
-    console.log(`Server istening on port ${PORT}`)
+    console.log(`Server listening on port ${PORT}`)
 })

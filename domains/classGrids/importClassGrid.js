@@ -41,7 +41,7 @@ module.exports = async ({ file }) => {
         for (let column = 3; column < columnCount; column++) {
             if (grid[row][column]) {
                 isClassNameRow = true
-                const disciplineName = trim(grid[row][column])
+                const disciplineName = trim(grid[row][column].replace('(Veteranos)', '').replace('(reof)', '').replace('(Reof)', ''))
                 const classNameAndTeacherName = grid[row + 1][column]
                 const [className, teacherName] = split(' - ', classNameAndTeacherName)
                 const classDay = trim(grid[2][column] || grid[2][column - 1])
@@ -49,9 +49,11 @@ module.exports = async ({ file }) => {
                 const classStartTime = trim(classTime[0])
                 const classEndTime = trim(classTime[1])
 
-                classes.push({
-                    disciplineName, className, classDay, classStartTime, classEndTime, teacherName
-                })
+                if (daysOfTheWeek[classDay] >= 1 && daysOfTheWeek[classDay] <= 5) {
+                    classes.push({
+                        disciplineName, className, classDay, classStartTime, classEndTime, teacherName
+                    })
+                }
             }
         }
         if (isClassNameRow) row++
@@ -60,24 +62,29 @@ module.exports = async ({ file }) => {
     const meetingTimes = await db.select('id', 'day_of_the_week AS dayOfTheWeek', 'start_time AS startTime', 'end_time AS endTime').from('meeting_times')
     const meetingTimesReference = {}
     meetingTimes.forEach((meetingTime) => {
-        const {
-            id, dayOfTheWeek, startTime, endTime
-        } = meetingTime
-        meetingTimesReference[`${dayOfTheWeek}-${startTime}-${endTime}`] = id
+        const { dayOfTheWeek, startTime, endTime } = meetingTime
+        meetingTimesReference[`${dayOfTheWeek}-${startTime}-${endTime}`] = meetingTime
     })
 
     const disciplines = await db.select('id', 'name').from('disciplines')
     const disciplineIdByName = {}
     disciplines.forEach((discipline) => {
-        const { id, name } = discipline
-        disciplineIdByName[name.toUpperCase()] = id
+        const { name } = discipline
+        disciplineIdByName[name.toUpperCase()] = discipline
+    })
+
+    const classesInfo = classes.map((currentClass) => ({
+        ...currentClass,
+        meetingTime: meetingTimesReference[`${daysOfTheWeek[currentClass.classDay]}-${times[currentClass.classStartTime]}-${times[currentClass.classEndTime]}`],
+        discipline: disciplineIdByName[currentClass.disciplineName.toUpperCase()] || 'n achei'
+    }))
+
+    classesInfo.sort((a, b) => {
+        if (a.meetingTime.id < b.meetingTime.id) return -1
+        return 1
     })
 
     return {
-        classes: classes.map((currentClass) => ({
-            ...currentClass,
-            meetingTimeId: meetingTimesReference[`${daysOfTheWeek[currentClass.classDay]}-${times[currentClass.classStartTime]}-${times[currentClass.classEndTime]}`],
-            disciplineId: disciplineIdByName[currentClass.disciplineName.toUpperCase()] || 'n achei'
-        }))
+        classes: classesInfo
     }
 }
