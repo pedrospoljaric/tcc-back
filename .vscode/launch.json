@@ -17,6 +17,16 @@
             ],
             "type": "pwa-node",
             "console": "integratedTerminal"
+        },
+        {
+            "name": "Launch Program",
+            "program": "${workspaceFolder}/teste.js",
+            "request": "launch",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "type": "pwa-node",
+            "console": "integratedTerminal"
         }
     ]
 }

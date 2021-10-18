@@ -1,8 +1,8 @@
 const { prop } = require('lodash/fp')
-const { getRecordsByUserCredentials } = require('#domains/records')
+const { authenticate } = require('#domains/authentication')
 
 module.exports = (ctx) => ({
-    method: getRecordsByUserCredentials.makeRequest,
+    method: authenticate,
     parameters: {
         username: prop('request.body.username', ctx),
         password: prop('request.body.password', ctx)

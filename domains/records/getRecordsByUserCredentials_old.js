@@ -1,3 +1,4 @@
+/* eslint-disable no-plusplus */
 /* eslint-disable no-console */
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable no-loop-func */
@@ -8,7 +9,16 @@ const puppeteer = require('puppeteer')
 const crypto = require('crypto')
 const db = require('#database')
 const { APIError, logError } = require('../../utils')
-const makeId = require('./utils/makeId')
+
+const makeId = (length) => {
+    let result = ''
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+    const charactersLength = characters.length
+    for (let i = 0; i < length; i++) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength))
+    }
+    return result
+}
 
 const keyBlacklist = ['Nome', 'Matricula', 'CPF', 'RG', 'Órgão Expedidor', 'Email(s)']
 

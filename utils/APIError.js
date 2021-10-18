@@ -1,5 +1,3 @@
-const logError = require('./logError')
-
 const errorCodes = {
     400: 'BadRequest',
     401: 'Unauthorized',
@@ -12,10 +10,6 @@ module.exports = (message, code = 500, data) => {
     error.status = code
     error.name = errorCodes[code]
     error.data = data
-
-    if (code >= 500) {
-        logError(error)
-    }
 
     return error
 }

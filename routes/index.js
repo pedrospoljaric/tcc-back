@@ -1,14 +1,14 @@
 const Router = require('./router')
 
 const classGrids = require('./classGrids')
-const records = require('./records')
 const disciplines = require('./disciplines')
 const meetingTimes = require('./meetingTimes')
 const classes = require('./classes')
+const { authenticate } = require('#controllers/authentication')
 
 module.exports = new Router()
+    .post('/authenticate', authenticate)
     .use('/grids', classGrids)
-    .use('/records', records)
     .use('/disciplines', disciplines)
     .use('/meeting-times', meetingTimes)
     .use('/classes', classes)

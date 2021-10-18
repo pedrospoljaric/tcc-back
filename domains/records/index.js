@@ -1,5 +1,5 @@
-const getRecordsByUserCredentials = require('./getRecordsByUserCredentials')
+const insertUserRecordsFromFile = require('./insertUserRecordsFromFile')
 
 module.exports = {
-    getRecordsByUserCredentials
+    insertUserRecordsFromFile
 }
