@@ -17,7 +17,7 @@ const columns = {
     shift: [9.437, 11],
     class_name: [11.273, 13],
     discipline_code: [13.521, 15.5],
-    discipline_name: [15.908000000000001, 16],
+    discipline_name: [15.6, 23],
     group: [24, 30],
     category: [31.127, 36],
     absences: [36.19, 38],

@@ -17,12 +17,9 @@ module.exports = async ({ semesterName, classes }) => {
             classesReference[`${insertedClass.name}-${insertedClass.discipline_id}-${prop('id', semester)}`] = insertedClass.id
         }
 
-        await trx.table('class_meeting_times').insert(classes.map((newClass) => {
-            let stop
-            return {
-                class_id: classesReference[`${newClass.name}-${newClass.disciplineId || 1}-${prop('id', semester)}`],
-                meeting_time_id: newClass.meetingTimeId
-            }
-        }))
+        await trx.table('class_meeting_times').insert(classes.map((newClass) => ({
+            class_id: classesReference[`${newClass.name}-${newClass.disciplineId || 1}-${prop('id', semester)}`],
+            meeting_time_id: newClass.meetingTimeId
+        })))
     })
 }

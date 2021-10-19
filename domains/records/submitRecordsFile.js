@@ -36,5 +36,7 @@ module.exports = async ({ userId, file }) => {
         }
     })
 
-    let stop
+    return {
+        classes: records
+    }
 }
