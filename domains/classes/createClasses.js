@@ -2,9 +2,9 @@
 const { prop } = require('lodash/fp')
 const db = require('#database')
 
-module.exports = async ({ semesterName, classes }) => {
+module.exports = async ({ year, half, classes }) => {
     await db.transaction(async (trx) => {
-        const [semester] = await trx.table('semesters').insert({ name: semesterName }).returning('*')
+        const [semester] = await trx.table('semesters').insert({ year, half }).returning('*')
 
         const insertedClasses = await trx.table('classes').insert(classes.map((classInfo) => ({
             name: prop('name', classInfo),
@@ -21,5 +21,15 @@ module.exports = async ({ semesterName, classes }) => {
             class_id: classesReference[`${newClass.name}-${newClass.disciplineId || 1}-${prop('id', semester)}`],
             meeting_time_id: newClass.meetingTimeId
         })))
+
+        await trx.table('class_teachers').insert(classes.reduce((classTeachers, newClass) => [
+            ...classTeachers,
+            ...newClass.teachersIds.map((teacherId) => ({
+                class_id: classesReference[`${newClass.name}-${newClass.disciplineId || 1}-${prop('id', semester)}`],
+                teacher_id: teacherId
+            }))
+        ], []))
+            .onConflict(['class_id', 'teacher_id'])
+            .ignore()
     })
 }

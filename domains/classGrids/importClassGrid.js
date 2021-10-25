@@ -41,9 +41,10 @@ module.exports = async ({ file }) => {
         for (let column = 3; column < columnCount; column++) {
             if (grid[row][column]) {
                 isClassNameRow = true
-                const disciplineName = trim(grid[row][column].replace('(Veteranos)', '').replace('(reof)', '').replace('(Reof)', ''))
+                const rawDisciplineName = trim(grid[row][column].replace('(Veteranos)', '').replace('(reof)', '').replace('(Reof)', ''))
                 const classNameAndTeacherName = grid[row + 1][column]
-                const [className, teacherName] = split(' - ', classNameAndTeacherName)
+                const [className, rawTeachersNames] = split(/\s*-\s*/, classNameAndTeacherName)
+                const teachersNames = split('/', rawTeachersNames).map(trim)
                 const classDay = trim(grid[2][column] || grid[2][column - 1])
                 const classTime = split('-', grid[row][2].replace(' - ', '-'))
                 const classStartTime = trim(classTime[0])
@@ -51,7 +52,7 @@ module.exports = async ({ file }) => {
 
                 if (daysOfTheWeek[classDay] >= 1 && daysOfTheWeek[classDay] <= 5) {
                     classes.push({
-                        disciplineName, className, classDay, classStartTime, classEndTime, teacherName
+                        rawDisciplineName, className, classDay, classStartTime, classEndTime, rawTeachersNames, teachersNames
                     })
                 }
             }
@@ -73,10 +74,29 @@ module.exports = async ({ file }) => {
         disciplineIdByName[name.toUpperCase()] = discipline
     })
 
+    const teachers = await db.select('id', 'name', 'nicknames').from('teachers')
+    const teachersByNickName = {}
+    teachers.forEach((teacher) => {
+        const { nicknames } = teacher
+        nicknames.forEach((nickname) => {
+            teachersByNickName[nickname] = teacher
+        })
+    })
+
     const classesInfo = classes.map((currentClass) => ({
-        ...currentClass,
-        meetingTime: meetingTimesReference[`${daysOfTheWeek[currentClass.classDay]}-${times[currentClass.classStartTime]}-${times[currentClass.classEndTime]}`],
-        discipline: disciplineIdByName[currentClass.disciplineName.toUpperCase()] || 'n achei'
+        className: currentClass.className,
+        meetingTime: {
+            ...meetingTimesReference[`${daysOfTheWeek[currentClass.classDay]}-${times[currentClass.classStartTime]}-${times[currentClass.classEndTime]}`],
+            raw: `${currentClass.classDay} ${currentClass.classStartTime} ${currentClass.classEndTime}`
+        },
+        discipline: {
+            ...disciplineIdByName[currentClass.rawDisciplineName.toUpperCase()],
+            raw: currentClass.rawDisciplineName
+        },
+        teachers: currentClass.teachersNames.map((teacherName) => ({
+            ...teachersByNickName[teacherName],
+            raw: teacherName
+        }))
     }))
 
     classesInfo.sort((a, b) => {

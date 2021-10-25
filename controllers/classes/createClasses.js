@@ -4,7 +4,8 @@ const { createClasses } = require('#domains/classes')
 module.exports = (ctx) => ({
     method: createClasses,
     parameters: {
-        semesterName: prop('request.body.semesterName', ctx),
+        year: Number(prop('request.body.year', ctx)),
+        half: Number(prop('request.body.half', ctx)),
         classes: prop('request.body.classes', ctx)
     }
 })

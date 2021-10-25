@@ -1,8 +1,11 @@
+exports.up = (knex) => knex.schema.createTable('class_teachers', (table) => {
+    table.integer('class_id').notNullable()
+    table.integer('teacher_id').notNullable()
 
-exports.up = function(knex) {
-  
-};
+    table.foreign('class_id').references('id').on('classes')
+    table.foreign('teacher_id').references('id').on('users')
 
-exports.down = function(knex) {
-  
-};
+    table.primary(['class_id', 'teacher_id'])
+})
+
+exports.down = (knex) => knex.schema.dropTable('class_teachers')

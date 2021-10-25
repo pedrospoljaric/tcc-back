@@ -1,8 +1,7 @@
+exports.up = (knex) => knex.schema.createTable('teachers', (table) => {
+    table.increments()
+    table.text('name').notNullable()
+    table.specificType('nicknames', 'TEXT[]').notNullable().defaultsTo('{}')
+})
 
-exports.up = function(knex) {
-  
-};
-
-exports.down = function(knex) {
-  
-};
+exports.down = (knex) => knex.schema.dropTable('teachers')

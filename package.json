@@ -5,11 +5,13 @@
   "main": "index.js",
   "scripts": {
     "start": "node index",
+    "db:create": "node ./scripts/createDatabase.js",
+    "db:drop": "node ./scripts/dropDatabase.js",
     "db:migration:create": "./node_modules/.bin/knex migrate:make --knexfile ./database/knexfile.js",
     "db:migrate": "./node_modules/.bin/knex migrate:latest --knexfile ./database/knexfile.js",
     "db:migrate:undo": "./node_modules/.bin/knex migrate:down --knexfile ./database/knexfile.js",
-    "db:create": "node ./scripts/createDatabase.js",
-    "db:drop": "node ./scripts/dropDatabase.js",
+    "db:seed:create": "./node_modules/.bin/knex seed:make --knexfile ./database/knexfile.js",
+    "db:seed": "./node_modules/.bin/knex seed:run --knexfile ./database/knexfile.js",
     "postinstall": "link-module-alias"
   },
   "repository": {
