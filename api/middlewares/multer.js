@@ -1,3 +1,3 @@
-const multer = require('@koa/multer')
+const multer = require('multer')
 
 module.exports = (file) => multer({ dest: 'tmp/' }).single(file)

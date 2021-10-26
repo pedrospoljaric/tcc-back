@@ -1,7 +1,9 @@
-const Router = require('./router')
+const express = require('express')
 
 const { createClasses } = require('#controllers/classes')
+const controllers = require('#controllers')
 
-module.exports = new Router()
-    .post('/', createClasses)
-    .routes()
+const router = express.Router()
+
+module.exports = router
+    .post('/', controllers(createClasses))

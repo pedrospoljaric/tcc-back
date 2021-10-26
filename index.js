@@ -1,25 +1,21 @@
 require('dotenv').config()
-const Koa = require('koa')
-const bodyParser = require('koa-bodyparser')
-const cors = require('kcors')
-const mount = require('koa-mount')
-const respond = require('koa-respond')
-const routes = require('./routes')
+const express = require('express')
+const cors = require('cors')
+const routes = require('./api')
 
-const app = new Koa()
-require('koa-qs')(app)
+const app = express()
 
 const PORT = process.env.PORT || 1234
 
 app
-    .use(respond())
-    .use(cors({ origin: '*' }))
-    .use(bodyParser(({ formLimit: '10mb', jsonLimit: '10mb', urlencoded: { extended: true } })))
-    .use(mount('/api', routes))
+    .use(cors())
+    .use(express.json())
+    .use(express.urlencoded({ extended: true }))
+    .use('/api', routes)
 
-app.on('error', (err, ctx) => {
+app.use((req, res, next, err) => {
     const errorCode = err.status || 500
-    ctx.send(errorCode, {
+    res.status(errorCode).json(errorCode, {
         success: false,
         error: {
             status: errorCode,

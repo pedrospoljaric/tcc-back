@@ -1,7 +1,9 @@
-const Router = require('./router')
+const express = require('express')
 
 const { getMeetingTimes } = require('#controllers/meetingTimes')
+const controllers = require('#controllers')
 
-module.exports = new Router()
-    .get('/', getMeetingTimes)
-    .routes()
+const router = express.Router()
+
+module.exports = router
+    .get('/', controllers(getMeetingTimes))

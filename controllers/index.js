@@ -1,14 +1,14 @@
 /* eslint-disable consistent-return */
-module.exports = (controllerMethod) => async (ctx) => {
-    const { method: domainMethod, parameters } = controllerMethod(ctx)
+module.exports = (controllerMethod) => async (req, res, next) => {
+    const { method: domainMethod, parameters } = controllerMethod(req)
 
     try {
         const data = await domainMethod(parameters)
-        return ctx.send(200, {
+        return res.json({
             success: true,
             data
         })
     } catch (err) {
-        ctx.app.emit('error', err, ctx)
+        next(err)
     }
 }
