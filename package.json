@@ -51,7 +51,7 @@
     "#controllers": "./controllers",
     "#database": "./database",
     "#domains": "./domains",
-    "#routes": "./routes",
+    "#routes": "./api",
     "#scripts": "./scripts",
     "#utils": "./utils",
     "#services": "./services"
