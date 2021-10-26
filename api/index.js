@@ -9,7 +9,7 @@ const teachers = require('./teachers')
 
 const router = express.Router()
 
-module.exports = router
+router
     .use('/authentication', authentication)
     .use('/grids', classGrids)
     .use('/disciplines', disciplines)
@@ -17,3 +17,5 @@ module.exports = router
     .use('/classes', classes)
     .use('/records', records)
     .use('/teachers', teachers)
+
+module.exports = router

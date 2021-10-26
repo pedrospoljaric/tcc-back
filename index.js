@@ -1,17 +1,18 @@
 require('dotenv').config()
 const express = require('express')
 const cors = require('cors')
-const routes = require('./api')
+// const routes = require('./api')
+const disciplines = require('./api/disciplines')
 
 const app = express()
 
-const PORT = process.env.PORT || 1234
+const PORT = process.env.PORT || 5050
 
 app
     .use(cors())
     .use(express.json())
     .use(express.urlencoded({ extended: true }))
-    .use('/api', routes)
+    .use('/api/disciplines', disciplines)
 
 app.use((req, res, next, err) => {
     const errorCode = err.status || 500

@@ -5,5 +5,7 @@ const controllers = require('#controllers')
 
 const router = express.Router()
 
-module.exports = router
+router
     .get('/', controllers(getDisciplines))
+
+module.exports = router
