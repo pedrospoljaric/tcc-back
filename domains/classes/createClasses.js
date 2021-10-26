@@ -10,7 +10,7 @@ module.exports = async ({ year, half, classes }) => {
             name: prop('name', classInfo),
             discipline_id: prop('disciplineId', classInfo) || 1,
             semester_id: prop('id', semester)
-        }))).returning('*')
+        }))).returning('*') // ta inserindo 1 turma pra cada horario, tem que juntar as turmas com nome e disciplina iguais
 
         const classesReference = {}
         for (const insertedClass of insertedClasses) {
