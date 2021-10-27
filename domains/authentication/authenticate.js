@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken')
-const { APIError } = require('#utils')
-const { intranet } = require('#services')
+const { APIError } = require('../../utils')
+const { intranet } = require('../../services')
 
 module.exports = async ({ username, password }) => {
     const loginSuccess = await intranet.authenticate({ username, password })
