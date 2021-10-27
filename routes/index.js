@@ -1,4 +1,5 @@
-const express = require('express')
+const Router = require('./router')
+
 const classGrids = require('./classGrids')
 const disciplines = require('./disciplines')
 const meetingTimes = require('./meetingTimes')
@@ -7,9 +8,7 @@ const records = require('./records')
 const authentication = require('./authentication')
 const teachers = require('./teachers')
 
-const router = express.Router()
-
-router
+module.exports = new Router()
     .use('/authentication', authentication)
     .use('/grids', classGrids)
     .use('/disciplines', disciplines)
@@ -17,5 +16,4 @@ router
     .use('/classes', classes)
     .use('/records', records)
     .use('/teachers', teachers)
-
-module.exports = router
+    .routes()

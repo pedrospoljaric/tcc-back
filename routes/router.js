@@ -1,5 +1,5 @@
 const KoaRouter = require('koa-router')
-const controller = require('#controllers')
+const controller = require('../controllers')
 
 class Router extends KoaRouter {
     get(path, ...methods) {

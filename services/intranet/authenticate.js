@@ -1,5 +1,5 @@
 const puppeteer = require('puppeteer')
-const { APIError } = require('#utils')
+const { APIError } = require('../../utils')
 
 const waitForLogin = (page) => new Promise((resolve, reject) => {
     page.waitForSelector('#logout').then(() => {

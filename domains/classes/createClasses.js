@@ -1,6 +1,6 @@
 /* eslint-disable no-restricted-syntax */
 const { prop } = require('lodash/fp')
-const db = require('#database')
+const db = require('../../database')
 
 module.exports = async ({ year, half, classes }) => {
     await db.transaction(async (trx) => {

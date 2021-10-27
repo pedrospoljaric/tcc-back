@@ -1,5 +1,5 @@
 const { prop } = require('lodash/fp')
-const { authenticate } = require('#domains/authentication')
+const { authenticate } = require('../../domains/authentication')
 
 module.exports = (ctx) => ({
     method: authenticate,

@@ -1,22 +1,25 @@
 require('dotenv').config()
-const express = require('express')
-const cors = require('cors')
-// const routes = require('./api')
-const disciplines = require('./api/disciplines')
+const Koa = require('koa')
+const bodyParser = require('koa-bodyparser')
+const cors = require('kcors')
+const mount = require('koa-mount')
+const respond = require('koa-respond')
+const routes = require('./routes')
 
-const app = express()
+const app = new Koa()
+require('koa-qs')(app)
 
-const PORT = process.env.PORT || 5050
+const PORT = process.env.PORT || 1234
 
 app
-    .use(cors())
-    .use(express.json())
-    .use(express.urlencoded({ extended: true }))
-    .use('/api/disciplines', disciplines)
+    .use(respond())
+    .use(cors({ origin: '*' }))
+    .use(bodyParser(({ formLimit: '10mb', jsonLimit: '10mb', urlencoded: { extended: true } })))
+    .use(mount('/api', routes))
 
-app.use((req, res, next, err) => {
+app.on('error', (err, ctx) => {
     const errorCode = err.status || 500
-    res.status(errorCode).json(errorCode, {
+    ctx.send(errorCode, {
         success: false,
         error: {
             status: errorCode,

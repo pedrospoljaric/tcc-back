@@ -1,5 +1,5 @@
 const { prop } = require('lodash/fp')
-const { createClasses } = require('#domains/classes')
+const { createClasses } = require('../../domains/classes')
 
 module.exports = (ctx) => ({
     method: createClasses,

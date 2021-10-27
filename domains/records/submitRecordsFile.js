@@ -1,6 +1,6 @@
 /* eslint-disable no-restricted-syntax */
 const { keyBy, prop, isNaN } = require('lodash/fp')
-const db = require('#database')
+const db = require('../../database')
 const { getUserRecordsFromFile } = require('./utils')
 
 module.exports = async ({ userId, file }) => {

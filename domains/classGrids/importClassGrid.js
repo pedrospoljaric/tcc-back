@@ -3,7 +3,7 @@ const ExcelJS = require('exceljs')
 const {
     prop, split, trim
 } = require('lodash/fp')
-const db = require('#database')
+const db = require('../../database')
 
 const daysOfTheWeek = {
     Segunda: 1,

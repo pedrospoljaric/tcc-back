@@ -1,4 +1,4 @@
-const { getTeachers } = require('#domains/teachers')
+const { getTeachers } = require('../../domains/teachers')
 
 module.exports = () => ({
     method: getTeachers

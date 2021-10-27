@@ -1,4 +1,4 @@
-const { getMeetingTimes } = require('#domains/meetingTimes')
+const { getMeetingTimes } = require('../../domains/meetingTimes')
 
 module.exports = () => ({
     method: getMeetingTimes
