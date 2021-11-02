@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "engines": {
-      "node": "14.x"
+    "node": "14.x"
   },
   "scripts": {
     "start": "node index.js",
@@ -14,8 +14,7 @@
     "db:migrate": "./node_modules/.bin/knex migrate:latest --knexfile ./database/knexfile.js",
     "db:migrate:undo": "./node_modules/.bin/knex migrate:down --knexfile ./database/knexfile.js",
     "db:seed:create": "./node_modules/.bin/knex seed:make --knexfile ./database/knexfile.js",
-    "db:seed": "./node_modules/.bin/knex seed:run --knexfile ./database/knexfile.js",
-    "postinstall": "link-module-alias"
+    "db:seed": "./node_modules/.bin/knex seed:run --knexfile ./database/knexfile.js"
   },
   "repository": {
     "type": "git",
@@ -25,24 +24,23 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@koa/multer": "^3.0.0",
-    "cors": "^2.8.5",
+    "@koa/multer": "3.0.0",
+    "cors": "2.8.5",
     "dotenv": "10.0.0",
     "exceljs": "4.2.1",
-    "express": "^4.17.1",
+    "express": "4.17.1",
     "jsonwebtoken": "8.5.1",
-    "kcors": "^2.2.2",
+    "kcors": "2.2.2",
     "knex": "0.95.6",
-    "koa": "^2.13.3",
-    "koa-bodyparser": "^4.3.0",
-    "koa-mount": "^4.0.0",
-    "koa-qs": "^3.0.0",
-    "koa-respond": "^2.1.0",
-    "koa-router": "^10.1.1",
-    "link-module-alias": "^1.2.0",
+    "koa": "2.13.3",
+    "koa-bodyparser": "4.3.0",
+    "koa-mount": "4.0.0",
+    "koa-qs": "3.0.0",
+    "koa-respond": "2.1.0",
+    "koa-router": "10.1.1",
     "lodash": "4.17.21",
-    "multer": "^1.4.3",
-    "pdfreader": "^1.2.12",
+    "multer": "1.4.3",
+    "pdfreader": "1.2.12",
     "pg": "8.6.0",
     "puppeteer": "10.0.0",
     "puppeteer-core": "10.0.0"
@@ -51,14 +49,5 @@
     "eslint": "7.28.0",
     "eslint-config-airbnb-base": "14.2.1",
     "eslint-plugin-import": "2.23.4"
-  },
-  "_moduleAliases": {
-    "#controllers": "./controllers",
-    "#database": "./database",
-    "#domains": "./domains",
-    "#routes": "./api",
-    "#scripts": "./scripts",
-    "#utils": "./utils",
-    "#services": "./services"
   }
 }
