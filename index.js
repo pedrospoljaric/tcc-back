@@ -17,18 +17,6 @@ app
     .use(bodyParser(({ formLimit: '10mb', jsonLimit: '10mb', urlencoded: { extended: true } })))
     .use(mount('/api', routes))
 
-app.on('error', (err, ctx) => {
-    const errorCode = err.status || 500
-    ctx.send(errorCode, {
-        success: false,
-        error: {
-            status: errorCode,
-            name: err.name || 'APIError',
-            message: err.message
-        }
-    })
-})
-
 app.listen(PORT, () => {
     // eslint-disable-next-line no-console
     console.log(`Server listening on port ${PORT}`)

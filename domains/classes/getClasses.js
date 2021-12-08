@@ -1,7 +1,7 @@
 const { prop, keyBy } = require('lodash/fp')
 const db = require('../../database')
 
-module.exports = async ({ semesterId }) => {
+module.exports = async ({ semesterId, disciplinesIds }) => {
     const classes = await db
         .select(
             'C.id', 'C.name',
@@ -22,6 +22,7 @@ module.exports = async ({ semesterId }) => {
         .leftJoin('meeting_times AS MT', { 'CMT.meeting_time_id': 'MT.id' })
         .modify((query) => {
             if (semesterId) query.where({ 'C.semester_id': semesterId })
+            if (disciplinesIds) query.whereIn('D.id', disciplinesIds)
         })
         .groupBy('C.id', 'D.id')
         .orderBy('D.name')
