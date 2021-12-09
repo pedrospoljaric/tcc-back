@@ -1,4 +1,4 @@
-const { prop } = require('lodash/fp')
+const { prop, isEmpty, intersection } = require('lodash/fp')
 const db = require('../../database')
 const getClasses = require('../classes/getClasses')
 
@@ -17,7 +17,29 @@ module.exports = async ({ courseId, semesterNumber, semesterId }) => {
 
     const disciplinesIds = disciplines.map(prop('id'))
 
-    const classes = await getClasses({ semesterId, disciplinesIds })
+    const { classes } = await getClasses({ semesterId, disciplinesIds })
 
-    return classes
+    const priorityOrderedDisciplinesIds = await db
+        .pluck('D.id')
+        .from('classes AS C')
+        .innerJoin('disciplines AS D', { 'C.discipline_id': 'D.id' })
+        .whereIn('D.id', disciplinesIds)
+        .groupBy('D.id')
+        .orderByRaw('COUNT(*)')
+
+    const pickedMeetingTimesIds = []
+
+    const pickedClasses = priorityOrderedDisciplinesIds.map((disciplineId) => {
+        const disciplineClasses = classes
+            .filter((classItem) => prop('discipline.id', classItem) === disciplineId)
+            .filter((classItem) => isEmpty(intersection(prop('meetingTimes', classItem).map(prop('id')), pickedMeetingTimesIds)))
+
+        const [pickedClass] = disciplineClasses
+        pickedMeetingTimesIds.push(...prop('meetingTimes', pickedClass).map(prop('id')))
+        return pickedClass
+    })
+
+    return {
+        classes: pickedClasses
+    }
 }

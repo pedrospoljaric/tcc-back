@@ -8,7 +8,7 @@ module.exports = async ({ year, half, classes }) => {
 
         const insertedClasses = await trx.table('classes').insert(classes.map((classInfo) => ({
             name: prop('name', classInfo),
-            discipline_id: prop('disciplineId', classInfo) || 1,
+            discipline_id: prop('disciplineId', classInfo),
             semester_id: prop('id', semester)
         })))
             .onConflict(['name', 'discipline_id', 'semester_id'])
