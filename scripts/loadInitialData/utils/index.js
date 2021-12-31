@@ -4,7 +4,7 @@ const disciplines = require('./disciplines')
 const meetingTimes = require('./meetingTimes')
 const teachers = require('./teachers')
 const disciplineGroups = require('./disciplineGroups')
-const disciplineGroupsDisciplines = require('./disciplineGroupsDisciplines')
+const eletivasInterdisciplinaresDisciplines = require('./eletivasInterdisciplinaresDisciplines')
 
 module.exports = {
     courseDisciplines,
@@ -13,5 +13,5 @@ module.exports = {
     meetingTimes,
     teachers,
     disciplineGroups,
-    disciplineGroupsDisciplines
+    eletivasInterdisciplinaresDisciplines
 }

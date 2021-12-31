@@ -28,9 +28,10 @@ module.exports = async ({ userId, file }) => {
         class_id: classesReference[`${record.class_name}-${prop('id', disciplinesReference[record.discipline_name])}-${prop('id', semestersReference[`${record.year}-${record.semester}`])}`],
         student_id: userId,
         grade: Number((record.grade || '').replace(',', '.')) || null,
-        absences: isNaN(Number(record.absences)) ? null : Number(record.absences),
-        record
+        absences: isNaN(Number(record.absences)) ? null : Number(record.absences)
     }))
+
+    await db.table('class_students').insert(classStudents)
 
     return {
         classes: classStudents
