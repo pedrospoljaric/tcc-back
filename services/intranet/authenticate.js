@@ -11,9 +11,12 @@ const waitForLogin = (page) => new Promise((resolve, reject) => {
 })
 
 module.exports = async ({ username, password }) => {
+    if (process.env.NODE_ENV === 'development') return true
+
     let loginResult
     let page
     let browser
+
     try {
         browser = await puppeteer.launch({
             executablePath: 'D:\\Programas(x86)\\Microsoft\\Edge\\Application\\msedge.exe',

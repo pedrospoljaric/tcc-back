@@ -1,5 +1,5 @@
 const {
-    prop, isEmpty, intersection, groupBy, orderBy
+    prop, groupBy, orderBy
 } = require('lodash/fp')
 const db = require('../../database')
 const getClasses = require('../classes/getClasses')
@@ -83,30 +83,65 @@ const setGridScore = (grid) => {
     }
 }
 
-module.exports = async ({ courseId, semesterNumber, semesterId }) => {
-    const disciplines = await db
-        .select('D.id', 'D.name')
+module.exports = async ({
+    userId, courseId, semesterNumber, semesterId
+}) => {
+    const courseSemestersDisciplines = await db
+        .select(
+            'D.id', 'D.name', 'CD.semester_number AS semesterNumber',
+            db.raw('ARRAY_REMOVE(ARRAY_AGG("DP".required_discipline_id), NULL) AS "requiredDisciplinesIds"')
+        )
         .from('course_disciplines AS CD')
         .innerJoin('disciplines AS D', { 'CD.discipline_id': 'D.id' })
-        .where({ 'CD.course_id': courseId, 'CD.semester_number': semesterNumber })
+        .leftJoin('discipline_prerequisites AS DP', { 'D.id': 'DP.discipline_id' })
+        .where({ 'CD.course_id': courseId })
+        .groupBy('D.id', 'CD.semester_number')
 
-    // const disciplineGroups = await db
-    //     .select('DG.id', 'DG.name')
-    //     .from('course_disciplines AS CD')
-    //     .innerJoin('discipline_groups AS DG', { 'CD.discipline_group_id': 'DG.id' })
-    //     .where({ 'CD.course_id': courseId, 'CD.semester_number': semesterNumber })
+    const courseDisciplines = groupBy('semesterNumber', courseSemestersDisciplines)
 
-    const disciplinesIds = disciplines.map(prop('id'))
+    const fulfilledDisciplinesIds = await db
+        .pluck('C.discipline_id')
+        .from('class_students AS CS')
+        .innerJoin('classes AS C', { 'CS.class_id': 'C.id' })
+        .where({ 'CS.student_id': userId, 'CS.fulfilled': true })
 
-    const { classes } = await getClasses({ semesterId, disciplinesIds })
+    const semesterDisciplines = courseDisciplines[semesterNumber]
 
-    // const priorityOrderedDisciplinesIds = await db
-    //     .pluck('D.id')
-    //     .from('classes AS C')
-    //     .innerJoin('disciplines AS D', { 'C.discipline_id': 'D.id' })
-    //     .whereIn('D.id', disciplinesIds)
-    //     .groupBy('D.id')
-    //     .orderByRaw('COUNT(*)')
+    const disciplines = []
+
+    const courseSemesterCount = Object.keys(courseDisciplines).length
+    const currentSemesterDisciplineCount = semesterDisciplines.length
+
+    // Guardar quantas disciplinas foram removidas da seleção inicial (disciplinas do semestre) para adicionar a mesma quantidade depois
+    // Remover todas que já foram cursadas
+    // Remover todas que possuem pré-requisitos não cumpridos
+    // Adicionar disciplinas atrasadas
+    // se sobrar espaço, adicionar disciplinas adiantadas
+
+    let disciplinesAdded = 0
+
+    const priorityOrderedSemesters = Array(courseSemesterCount).fill().map((_, i) => i + 1)
+    priorityOrderedSemesters.splice(semesterNumber - 1, 1)
+    priorityOrderedSemesters.unshift(semesterNumber)
+
+    priorityOrderedSemesters.forEach((currentSemesterNumber) => {
+        const currentSemesterDisciplines = courseDisciplines[currentSemesterNumber]
+        currentSemesterDisciplines.forEach((currentSemesterDiscipline) => {
+            if (disciplinesAdded >= currentSemesterDisciplineCount) return
+
+            const disciplineIsFulfilled = fulfilledDisciplinesIds.includes(prop('id', currentSemesterDiscipline))
+            if (disciplineIsFulfilled) return
+
+            const requiredDisciplinesIds = prop('requiredDisciplinesIds', currentSemesterDiscipline)
+            const requirementsAreFulfilled = requiredDisciplinesIds.every((disciplineId) => fulfilledDisciplinesIds.includes(disciplineId))
+            if (!requirementsAreFulfilled) return
+
+            disciplines.push(currentSemesterDiscipline)
+            disciplinesAdded += 1
+        })
+    })
+
+    const { classes } = await getClasses({ semesterId, disciplinesIds: disciplines.map(prop('id')) })
 
     const classesByDisciplineId = groupBy('discipline.id', classes)
     const classGroups = Object.values(classesByDisciplineId)
@@ -121,18 +156,6 @@ module.exports = async ({ courseId, semesterNumber, semesterId }) => {
     }))).filter(Boolean)
 
     const gridsOrderedByScore = orderBy(['score'], ['desc'], grids)
-
-    // const pickedMeetingTimesIds = []
-
-    // const pickedClasses = priorityOrderedDisciplinesIds.map((disciplineId) => {
-    //     const disciplineClasses = classes
-    //         .filter((classItem) => prop('discipline.id', classItem) === disciplineId)
-    //         .filter((classItem) => isEmpty(intersection(prop('meetingTimes', classItem).map(prop('id')), pickedMeetingTimesIds)))
-
-    //     const [pickedClass] = disciplineClasses
-    //     pickedMeetingTimesIds.push(...prop('meetingTimes', pickedClass).map(prop('id')))
-    //     return pickedClass
-    // })
 
     return {
         classes: prop('0.classes', gridsOrderedByScore)

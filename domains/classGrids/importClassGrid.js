@@ -50,7 +50,7 @@ module.exports = async ({ file }) => {
                 const classStartTime = trim(classTime[0])
                 const classEndTime = trim(classTime[1])
 
-                if (daysOfTheWeek[classDay] >= 1 && daysOfTheWeek[classDay] <= 5) {
+                if (daysOfTheWeek[classDay] >= 1 && daysOfTheWeek[classDay] <= 6) {
                     classes.push({
                         rawDisciplineName, className, classDay, classStartTime, classEndTime, rawTeachersNames, teachersNames
                     })
