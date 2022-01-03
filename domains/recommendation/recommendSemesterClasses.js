@@ -111,12 +111,14 @@ module.exports = async ({
 
     const courseSemesterCount = Object.keys(courseDisciplines).length
     const currentSemesterDisciplineCount = semesterDisciplines.length
+    // Usar preferências do usuário para definir quantas disciplinas selecionar
+    // Definir prioridades de disciplinas (grandes cadeias na sequência são mais importantes)
+    // Usar lista de disciplinas disponíveis no semestre para não acabar selecionando alguma que não está disponível
 
-    // Guardar quantas disciplinas foram removidas da seleção inicial (disciplinas do semestre) para adicionar a mesma quantidade depois
     // Remover todas que já foram cursadas
     // Remover todas que possuem pré-requisitos não cumpridos
     // Adicionar disciplinas atrasadas
-    // se sobrar espaço, adicionar disciplinas adiantadas
+    // Se sobrar espaço, adicionar disciplinas adiantadas
 
     let disciplinesAdded = 0
 
