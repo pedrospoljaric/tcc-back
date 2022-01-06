@@ -13,7 +13,7 @@ const recordStatusToFulfilled = {
 }
 
 module.exports = async ({ userId, file }) => {
-    const records = await getUserRecordsFromFile({ file })
+    const { courseName, records } = await getUserRecordsFromFile({ file })
 
     const semesters = await db.select('*').from('semesters')
     const semestersReference = {}
@@ -35,6 +35,16 @@ module.exports = async ({ userId, file }) => {
 
     const classStudents = []
     await db.transaction(async (trx) => {
+        if (courseName.includes('ENGENHARIA DE COMPUTAÇÃO')) {
+            const computerEngineeringCouse = await db('courses').where({ name: 'Engenharia de Computação' }).first()
+
+            await trx
+                .table('course_students')
+                .insert({ course_id: prop('id', computerEngineeringCouse), student_id: userId })
+                .onConflict(['course_id', 'student_id'])
+                .ignore()
+        }
+
         for (const record of records) {
             const year = prop('year', record)
             const half = prop('semester', record)
@@ -71,7 +81,7 @@ module.exports = async ({ userId, file }) => {
             })
         }
 
-        await trx.table('class_students').insert(classStudents)
+        await trx.table('class_students').insert(classStudents).onConflict(['class_id', 'student_id']).ignore()
     })
 
     return {

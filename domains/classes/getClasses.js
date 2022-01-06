@@ -47,6 +47,7 @@ module.exports = async ({ semesterId, disciplinesIds }) => {
 
     const classesWithTeachers = classes.map((classroom) => ({
         ...classroom,
+        meetingTimes: prop('meetingTimes.0.id', classroom) && prop('meetingTimes', classroom),
         teachers: prop(`${prop('id', classroom)}.teachers`, classesTeachersReference)
     }))
 

@@ -33,6 +33,9 @@ module.exports = async ({ file }) => {
 
     const records = []
     const rows = items.map(prop('text'))
+
+    const courseName = prop(`${rows.indexOf('Curso: ') + 1}`, rows)
+
     let record = {}
     items.slice(rows.indexOf('Situação') + 1).forEach((item) => {
         if (item.x >= columns.year[0] && item.x <= columns.year[1]) record = { year: item.text }
@@ -56,5 +59,8 @@ module.exports = async ({ file }) => {
         }
     })
 
-    return records
+    return {
+        courseName,
+        records
+    }
 }

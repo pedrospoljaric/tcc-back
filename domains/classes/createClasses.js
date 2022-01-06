@@ -15,27 +15,23 @@ module.exports = async ({ year, half, classes }) => {
             .ignore()
             .returning('*')
 
-        try {
-            const classesReference = {}
-            for (const insertedClass of insertedClasses) {
-                classesReference[`${prop('name', insertedClass)}-${insertedClass.discipline_id}-${prop('id', semester)}`] = insertedClass.id
-            }
-            await trx.table('class_meeting_times').insert(classes.map((newClass) => ({
-                class_id: classesReference[`${newClass.name}-${newClass.disciplineId || 1}-${prop('id', semester)}`],
-                meeting_time_id: newClass.meetingTimeId
-            })))
-
-            await trx.table('class_teachers').insert(classes.reduce((classTeachers, newClass) => [
-                ...classTeachers,
-                ...newClass.teachersIds.map((teacherId) => ({
-                    class_id: classesReference[`${newClass.name}-${newClass.disciplineId || 1}-${prop('id', semester)}`],
-                    teacher_id: teacherId
-                }))
-            ], []))
-                .onConflict(['class_id', 'teacher_id'])
-                .ignore()
-        } catch (err) {
-            throw err
+        const classesReference = {}
+        for (const insertedClass of insertedClasses) {
+            classesReference[`${prop('name', insertedClass)}-${insertedClass.discipline_id}-${prop('id', semester)}`] = insertedClass.id
         }
+        await trx.table('class_meeting_times').insert(classes.map((newClass) => ({
+            class_id: classesReference[`${newClass.name}-${newClass.disciplineId || 1}-${prop('id', semester)}`],
+            meeting_time_id: newClass.meetingTimeId
+        })))
+
+        await trx.table('class_teachers').insert(classes.reduce((classTeachers, newClass) => [
+            ...classTeachers,
+            ...newClass.teachersIds.map((teacherId) => ({
+                class_id: classesReference[`${newClass.name}-${newClass.disciplineId || 1}-${prop('id', semester)}`],
+                teacher_id: teacherId
+            }))
+        ], []))
+            .onConflict(['class_id', 'teacher_id'])
+            .ignore()
     })
 }

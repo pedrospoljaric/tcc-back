@@ -1,5 +1,5 @@
 const {
-    prop, groupBy, orderBy
+    prop, groupBy, orderBy, difference
 } = require('lodash/fp')
 const db = require('../../database')
 const getClasses = require('../classes/getClasses')
@@ -84,20 +84,16 @@ const setGridScore = (grid) => {
 }
 
 module.exports = async ({
-    userId, courseId, semesterNumber, semesterId
+    userId, courseId
 }) => {
-    const courseSemestersDisciplines = await db
-        .select(
-            'D.id', 'D.name', 'CD.semester_number AS semesterNumber',
-            db.raw('ARRAY_REMOVE(ARRAY_AGG("DP".required_discipline_id), NULL) AS "requiredDisciplinesIds"')
-        )
-        .from('course_disciplines AS CD')
-        .innerJoin('disciplines AS D', { 'CD.discipline_id': 'D.id' })
-        .leftJoin('discipline_prerequisites AS DP', { 'D.id': 'DP.discipline_id' })
-        .where({ 'CD.course_id': courseId })
-        .groupBy('D.id', 'CD.semester_number')
+    const mostRecentSemester = await db('semesters').orderBy('year', 'DESC').orderBy('half', 'DESC').first()
+    const semesterId = prop('id', mostRecentSemester)
 
-    const courseDisciplines = groupBy('semesterNumber', courseSemestersDisciplines)
+    const semesterDisciplinesIds = await db
+        .pluck('discipline_id')
+        .from('classes')
+        .where({ semester_id: semesterId })
+        .groupBy('discipline_id')
 
     const fulfilledDisciplinesIds = await db
         .pluck('C.discipline_id')
@@ -105,12 +101,24 @@ module.exports = async ({
         .innerJoin('classes AS C', { 'CS.class_id': 'C.id' })
         .where({ 'CS.student_id': userId, 'CS.fulfilled': true })
 
-    const semesterDisciplines = courseDisciplines[semesterNumber]
+    const pickableDisciplinesIds = difference(semesterDisciplinesIds, fulfilledDisciplinesIds)
+
+    const courseDisciplines = await db
+        .select(
+            'D.id', 'D.name',
+            db.raw('ARRAY_REMOVE(ARRAY_AGG("DP".required_discipline_id), NULL) AS "requiredDisciplinesIds"')
+        )
+        .from('course_disciplines AS CD')
+        .innerJoin('disciplines AS D', { 'CD.discipline_id': 'D.id' })
+        .leftJoin('discipline_prerequisites AS DP', { 'D.id': 'DP.discipline_id' })
+        .where({ 'CD.course_id': courseId })
+        .whereIn('CD.discipline_id', pickableDisciplinesIds)
+        .groupBy('D.id', 'CD.depth')
+        .orderBy('CD.depth', 'DESC')
 
     const disciplines = []
 
-    const courseSemesterCount = Object.keys(courseDisciplines).length
-    const currentSemesterDisciplineCount = semesterDisciplines.length
+    const disciplineAmountToPick = 5
     // Usar preferências do usuário para definir quantas disciplinas selecionar
     // Definir prioridades de disciplinas (grandes cadeias na sequência são mais importantes)
     // Usar lista de disciplinas disponíveis no semestre para não acabar selecionando alguma que não está disponível
@@ -120,27 +128,17 @@ module.exports = async ({
     // Adicionar disciplinas atrasadas
     // Se sobrar espaço, adicionar disciplinas adiantadas
 
-    let disciplinesAdded = 0
+    let disciplinesPicked = 0
 
-    const priorityOrderedSemesters = Array(courseSemesterCount).fill().map((_, i) => i + 1)
-    priorityOrderedSemesters.splice(semesterNumber - 1, 1)
-    priorityOrderedSemesters.unshift(semesterNumber)
+    courseDisciplines.forEach((courseDiscipline) => {
+        if (disciplinesPicked >= disciplineAmountToPick) return
 
-    priorityOrderedSemesters.forEach((currentSemesterNumber) => {
-        const currentSemesterDisciplines = courseDisciplines[currentSemesterNumber]
-        currentSemesterDisciplines.forEach((currentSemesterDiscipline) => {
-            if (disciplinesAdded >= currentSemesterDisciplineCount) return
+        const requiredDisciplinesIds = prop('requiredDisciplinesIds', courseDiscipline)
+        const requirementsAreFulfilled = requiredDisciplinesIds.every((disciplineId) => fulfilledDisciplinesIds.includes(disciplineId))
+        if (!requirementsAreFulfilled) return
 
-            const disciplineIsFulfilled = fulfilledDisciplinesIds.includes(prop('id', currentSemesterDiscipline))
-            if (disciplineIsFulfilled) return
-
-            const requiredDisciplinesIds = prop('requiredDisciplinesIds', currentSemesterDiscipline)
-            const requirementsAreFulfilled = requiredDisciplinesIds.every((disciplineId) => fulfilledDisciplinesIds.includes(disciplineId))
-            if (!requirementsAreFulfilled) return
-
-            disciplines.push(currentSemesterDiscipline)
-            disciplinesAdded += 1
-        })
+        disciplines.push(courseDiscipline)
+        disciplinesPicked += 1
     })
 
     const { classes } = await getClasses({ semesterId, disciplinesIds: disciplines.map(prop('id')) })
@@ -148,7 +146,7 @@ module.exports = async ({
     const classesByDisciplineId = groupBy('discipline.id', classes)
     const classGroups = Object.values(classesByDisciplineId)
 
-    const possibleGrids = permuteArrays(classGroups).map((classGroup) => ({ classes: classGroup }))
+    const possibleGrids = classGroups.length ? permuteArrays(classGroups).map((classGroup) => ({ classes: classGroup })) : []
     const grids = (await Promise.all(possibleGrids.map(async (grid) => {
         try {
             return setGridScore(grid)

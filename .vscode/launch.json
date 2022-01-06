@@ -20,7 +20,7 @@
         },
         {
             "name": "Launch Program",
-            "program": "${workspaceFolder}/teste.js",
+            "program": "${workspaceFolder}/scripts/setCourseDisciplinesDepth.js",
             "request": "launch",
             "skipFiles": [
                 "<node_internals>/**"
