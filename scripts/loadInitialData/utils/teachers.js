@@ -6,7 +6,7 @@ module.exports = (knex) => knex('teachers').insert([{
     nicknames: ['Capella']
 }, {
     name: 'Álvaro Luiz Fazenda',
-    nicknames: ['Alvaro']
+    nicknames: ['Alvaro', 'Álvaro']
 }, {
     name: 'Ana Luísa Dine Martins Lemos',
     nicknames: ['Ana Luisa', 'Luisa']
@@ -18,7 +18,7 @@ module.exports = (knex) => knex('teachers').insert([{
     nicknames: ['Albers']
 }, {
     name: 'Ana Paula Lemes',
-    nicknames: ['Ana']
+    nicknames: ['Ana', 'Lemes']
 }, {
     name: 'André Marcorin de Oliveira',
     nicknames: ['Marcorin', 'Andre', 'André']
@@ -45,16 +45,19 @@ module.exports = (knex) => knex('teachers').insert([{
     nicknames: ['Gurjão']
 }, {
     name: 'Cláudia Barbosa Ladeira de Campos',
-    nicknames: ['Claudia']
+    nicknames: ['Claudia', 'Cláudia']
 }, {
     name: 'Cláudia Aline Azevedo dos Santos Mesquita',
-    nicknames: ['Cláudia', 'Cláudia Aline']
+    nicknames: ['Claudia Aline', 'Cláudia Aline']
 }, {
     name: 'Claudio Saburo Shida',
     nicknames: ['Shida']
 }, {
     name: 'Cleber',
     nicknames: ['Cleber']
+}, {
+    name: 'Daiana',
+    nicknames: ['Daiana']
 }, {
     name: 'Danieli Aparecida Pereira Reis',
     nicknames: ['Danieli']
@@ -107,6 +110,9 @@ module.exports = (knex) => knex('teachers').insert([{
     name: 'Elizangela',
     nicknames: ['Elizangela']
 }, {
+    name: 'Elizabete Kobayashi',
+    nicknames: ['Kobayashi']
+}, {
     name: 'Erwin Doescher',
     nicknames: ['Erwin']
 }, {
@@ -138,7 +144,7 @@ module.exports = (knex) => knex('teachers').insert([{
     nicknames: ['Fernanda']
 }, {
     name: 'Flávia Cristina Martins Queiroz Mariano',
-    nicknames: ['Flavia']
+    nicknames: ['Flávia', 'Flavia']
 }, {
     name: 'Flávio Aimbire Soares de Carvalho',
     nicknames: ['Flávio', 'Flavio']
@@ -148,6 +154,9 @@ module.exports = (knex) => knex('teachers').insert([{
 }, {
     name: 'Gabriel',
     nicknames: ['Gabriel']
+}, {
+    name: 'Gabriela',
+    nicknames: ['Gabriela']
 }, {
     name: 'Gisele Ferreira de Lima',
     nicknames: ['Gisele']
@@ -195,10 +204,13 @@ module.exports = (knex) => knex('teachers').insert([{
     nicknames: ['Conceição']
 }, {
     name: 'Katia Regina Cardoso',
-    nicknames: ['Katia']
+    nicknames: ['Katia', 'Kátia']
 }, {
     name: 'Kelly Cristina Jorge Sakamoto',
     nicknames: ['Kelly']
+}, {
+    name: 'Larissa',
+    nicknames: ['Larissa']
 }, {
     name: 'Lauro Paulo da Silva Neto',
     nicknames: ['Lauro']
@@ -266,6 +278,9 @@ module.exports = (knex) => knex('teachers').insert([{
     name: 'Maria Elizete Kunkel',
     nicknames: ['Kunkel']
 }, {
+    name: 'Maria Rosário',
+    nicknames: ['Maria Rosário']
+}, {
     name: 'Mariana Amorim Fraga',
     nicknames: []
 }, {
@@ -303,7 +318,7 @@ module.exports = (knex) => knex('teachers').insert([{
     nicknames: ['Nirton']
 }, {
     name: 'Otavio Augusto Lazzarini Lemos',
-    nicknames: ['Otávio']
+    nicknames: ['Otávio', 'Otavio']
 }, {
     name: 'Patrícia Romano Cirilo',
     nicknames: ['Patrícia', 'Patricia']
@@ -348,10 +363,10 @@ module.exports = (knex) => knex('teachers').insert([{
     nicknames: ['Sâmia']
 }, {
     name: 'Sérgio Ronaldo Barros dos Santos',
-    nicknames: ['Barros']
+    nicknames: ['Barros', 'Sergio', 'Sérgio']
 }, {
     name: 'Silvia Lucia Cuffini',
-    nicknames: ['Silvia']
+    nicknames: ['Silvia', 'Sílvia']
 }, {
     name: 'Tatiana Sousa Cunha',
     nicknames: ['Tatiana']
@@ -363,7 +378,7 @@ module.exports = (knex) => knex('teachers').insert([{
     nicknames: ['Thadeu']
 }, {
     name: 'Thaína Aparecida Azevedo Tosta',
-    nicknames: ['Thaina']
+    nicknames: ['Thaína', 'Thaina']
 }, {
     name: 'Thiago Castilho de Mello',
     nicknames: ['Castilho']
@@ -384,7 +399,7 @@ module.exports = (knex) => knex('teachers').insert([{
     nicknames: ['Valerio', 'Valério']
 }, {
     name: 'Vanessa Gonçalves Paschoa Ferraz',
-    nicknames: ['Vanessa']
+    nicknames: ['Vanessa', 'Vanessa Paschoa']
 }, {
     name: 'Vanessa Andrade Pereira',
     nicknames: ['Pereira']
