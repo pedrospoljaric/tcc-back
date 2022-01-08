@@ -1,8 +1,8 @@
 const { prop } = require('lodash/fp')
-const { getClasses } = require('../../domains/classes')
+const { loadStudentSelectedClasses } = require('../../domains/classes')
 
 module.exports = (ctx) => ({
-    method: getClasses,
+    method: loadStudentSelectedClasses,
     parameters: {
         userId: prop('user.id', ctx)
     }

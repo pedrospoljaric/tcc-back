@@ -3,6 +3,8 @@ const {
 } = require('lodash/fp')
 const db = require('../../database')
 const getClasses = require('../classes/getClasses')
+const { getUserFulfilledDisciplinesIds } = require('../disciplines/utils')
+const { getMostRecentSemester } = require('../semesters/utils')
 
 const permuteArrays = (arrays, index = 0) => {
     if (index === arrays.length - 1) return arrays[index].map((item) => [item])
@@ -86,7 +88,7 @@ const setGridScore = (grid) => {
 module.exports = async ({
     userId, courseId
 }) => {
-    const mostRecentSemester = await db('semesters').orderBy('year', 'DESC').orderBy('half', 'DESC').first()
+    const mostRecentSemester = await getMostRecentSemester()
     const semesterId = prop('id', mostRecentSemester)
 
     const semesterDisciplinesIds = await db
@@ -95,11 +97,7 @@ module.exports = async ({
         .where({ semester_id: semesterId })
         .groupBy('discipline_id')
 
-    const fulfilledDisciplinesIds = await db
-        .pluck('C.discipline_id')
-        .from('class_students AS CS')
-        .innerJoin('classes AS C', { 'CS.class_id': 'C.id' })
-        .where({ 'CS.student_id': userId, 'CS.fulfilled': true })
+    const fulfilledDisciplinesIds = await getUserFulfilledDisciplinesIds(userId)
 
     const pickableDisciplinesIds = difference(semesterDisciplinesIds, fulfilledDisciplinesIds)
 
@@ -141,7 +139,7 @@ module.exports = async ({
         disciplinesPicked += 1
     })
 
-    const { classes } = await getClasses({ semesterId, disciplinesIds: disciplines.map(prop('id')) })
+    const { classes } = await getClasses({ userId, semesterId, disciplinesIds: disciplines.map(prop('id')) })
 
     const classesByDisciplineId = groupBy('discipline.id', classes)
     const classGroups = Object.values(classesByDisciplineId)
