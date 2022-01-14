@@ -1,4 +1,5 @@
 const computerEngineeringDisciplines = require('./computerEngineeringDisciplines')
+const computerScienceDisciplines = require('./computerScienceDisciplines')
 const courses = require('./courses')
 const disciplines = require('./disciplines')
 const meetingTimes = require('./meetingTimes')
@@ -9,6 +10,7 @@ const disciplinesRequirements = require('./disciplinesRequirements')
 
 module.exports = {
     computerEngineeringDisciplines,
+    computerScienceDisciplines,
     courses,
     disciplines,
     meetingTimes,
