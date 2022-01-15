@@ -50,7 +50,7 @@ module.exports = async ({ userId, file }) => {
             const half = prop('semester', record)
             const className = prop('class_name', record)
             const disciplineName = prop('discipline_name', record)
-            const disciplineId = prop(`${disciplineName}.id`, disciplinesReference)
+            let disciplineId = prop(`${disciplineName}.id`, disciplinesReference)
 
             let semester = semestersReference[`${year}-${half}`]
 
@@ -58,6 +58,12 @@ module.exports = async ({ userId, file }) => {
                 const [newSemester] = await trx.table('semesters').insert({ year, half }).returning('*')
                 semestersReference[`${year}-${half}`] = prop('id', newSemester)
                 semester = prop('id', newSemester)
+            }
+
+            if (!disciplineId) {
+                const [newDiscipline] = await trx.table('disciplines').insert({ name: disciplineName }).returning('*')
+                disciplinesReference[`${disciplineName}`] = { id: prop('id', newDiscipline) }
+                disciplineId = prop('id', newDiscipline)
             }
 
             let classInfo = classesReference[`${className}-${disciplineId}-${semester}`]
