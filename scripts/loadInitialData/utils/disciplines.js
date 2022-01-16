@@ -9,6 +9,7 @@ module.exports = (knex) => knex('disciplines').insert([
     { name: 'Análise Real I' },
     { name: 'Análise Real II' },
     { name: 'Análise de Sinais' },
+    { name: 'Análise de Investimentos de Riscos' },
     { name: 'Anatomia' },
     { name: 'Aplicações de robótica móvel' },
     { name: 'Aprendizado de máquina e reconhecimento de padrões' },
