@@ -11,7 +11,11 @@ const loadInitialData = async () => {
             // await insert.disciplineGroups(trx)
             // await insert.disciplineGroupsDisciplines(trx)
             // await insert.computerEngineeringDisciplines(trx)
-            await insert.disciplinesRequirements(trx)
+            // await insert.computerScienceDisciplines(trx)
+            await insert.eletivasBCCIDisciplines(trx)
+            await insert.eletivasBCCIIDisciplines(trx)
+            await insert.eletivasBCCIIIDisciplines(trx)
+            // await insert.disciplinesRequirements(trx)
         })
         db.destroy()
     } catch (err) {

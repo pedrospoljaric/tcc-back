@@ -73,7 +73,7 @@ module.exports = async (knex) => {
         { semester_number: 7, course_id: computerScienceId, discipline_group_id: getDisciplineGroupIdByName('Eletivas BCC II') },
         { semester_number: 7, course_id: computerScienceId, discipline_group_id: getDisciplineGroupIdByName('Eletivas livres') },
 
-        { semester_number: 8, course_id: computerScienceId, discipline_id: getDisciplineIdByName('Trabalho de Conclusão de Curso II') },
+        { semester_number: 8, course_id: computerScienceId, discipline_id: getDisciplineGroupIdByName('Trabalho de Conclusão de Curso II') },
         { semester_number: 8, course_id: computerScienceId, discipline_group_id: getDisciplineGroupIdByName('Eletivas BCC I') },
         { semester_number: 8, course_id: computerScienceId, discipline_group_id: getDisciplineGroupIdByName('Eletivas BCC II') },
         { semester_number: 8, course_id: computerScienceId, discipline_group_id: getDisciplineGroupIdByName('Eletivas BCC III') },
