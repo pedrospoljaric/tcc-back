@@ -191,6 +191,7 @@ module.exports = (knex) => knex('disciplines').insert([
     { name: 'Métodos Estatísticos Multivariados' },
     { name: 'Métodos Matemáticos para a Engenharia' },
     { name: 'Métodos numéricos para equações diferenciais' },
+    { name: 'Métodos Probabilísticos em Pesquisa Operacional' },
     { name: 'Microbiologia aplicada e industrial' },
     { name: 'Microbiologia geral' },
     { name: 'Microeconomia' },

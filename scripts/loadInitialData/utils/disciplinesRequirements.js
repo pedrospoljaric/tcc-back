@@ -128,7 +128,7 @@ module.exports = async (knex) => {
         { discipline_id: getDisciplineIdByName('Seleção de Materiais'), required_discipline_id: getDisciplineIdByName('Ciência e Tecnologia dos Materiais') },
         { discipline_id: getDisciplineIdByName('Séries e Equações Diferenciais Ordinárias'), required_discipline_id: getDisciplineIdByName('Cálculo em Uma Variável') },
         { discipline_id: getDisciplineIdByName('Séries Temporais e Previsões'), required_discipline_id: getDisciplineIdByName('Inferência e Análise de Regressão') },
-        { discipline_id: getDisciplineIdByName('Simulação de Sistemas'), required_discipline_id: getDisciplineIdByName('Lógica de Programação ') },
+        { discipline_id: getDisciplineIdByName('Simulação de Sistemas'), required_discipline_id: getDisciplineIdByName('Lógica de Programação') },
         { discipline_id: getDisciplineIdByName('Simulação de Sistemas'), required_discipline_id: getDisciplineIdByName('Probabilidade') },
         { discipline_id: getDisciplineIdByName('Sistemas Distribuídos'), required_discipline_id: getDisciplineIdByName('Sistemas Operacionais') },
         { discipline_id: getDisciplineIdByName('Sistemas Embarcados'), required_discipline_id: getDisciplineIdByName('Algoritmos e Estruturas de Dados') },
@@ -136,8 +136,6 @@ module.exports = async (knex) => {
         { discipline_id: getDisciplineIdByName('Sistemas Operacionais'), required_discipline_id: getDisciplineIdByName('Algoritmos e Estruturas de Dados I') },
         { discipline_id: getDisciplineIdByName('Sistemas Robóticos'), required_discipline_id: getDisciplineIdByName('Algoritmos e Estruturas de Dados I') },
         { discipline_id: getDisciplineIdByName('Sistemas Robóticos'), required_discipline_id: getDisciplineIdByName('Fenômenos Mecânicos') },
-        { discipline_id: getDisciplineIdByName('Simulação de Sistemas'), required_discipline_id: getDisciplineIdByName('Lógica de Programação') },
-        { discipline_id: getDisciplineIdByName('Simulação de Sistemas'), required_discipline_id: getDisciplineIdByName('Probabilidade') },
 
         { discipline_id: getDisciplineIdByName('Realidade Virtual e Aumentada'), required_discipline_id: getDisciplineIdByName('Algoritmos e Estruturas de Dados I') },
         { discipline_id: getDisciplineIdByName('Recuperação de Informação Multimídia'), required_discipline_id: getDisciplineIdByName('Algoritmos e Estruturas de Dados I') },
