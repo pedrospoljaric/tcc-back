@@ -14,10 +14,10 @@ module.exports = async (knex) => {
 
     return knex('discipline_group_disciplines').insert([
         { discipline_group_id: groupId, discipline_id: getDisciplineIdByName('Fenômenos Eletromagnéticos') },
-        { discipline_group_id: groupId, discipline_id: getDisciplineIdByName('Interação Humano-Computador') },
-        { discipline_group_id: groupId, discipline_id: getDisciplineIdByName('Introdução a Pesquisa Operacional') },
+        { discipline_group_id: groupId, discipline_id: getDisciplineIdByName('Interação humano- computador') },
+        { discipline_group_id: groupId, discipline_id: getDisciplineIdByName('Introdução à pesquisa operacional') },
         { discipline_group_id: groupId, discipline_id: getDisciplineIdByName('Multimídia') },
-        { discipline_group_id: groupId, discipline_id: getDisciplineIdByName('Paradigmas de Programação') },
+        { discipline_group_id: groupId, discipline_id: getDisciplineIdByName('Paradigmas da Programação') },
         { discipline_group_id: groupId, discipline_id: getDisciplineIdByName('Processamento de Imagens') },
         { discipline_group_id: groupId, discipline_id: getDisciplineIdByName('Segurança Computacional') },
         { discipline_group_id: groupId, discipline_id: getDisciplineIdByName('Sistemas Distribuídos') },

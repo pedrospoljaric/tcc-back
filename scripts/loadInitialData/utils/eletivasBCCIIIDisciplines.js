@@ -31,7 +31,7 @@ module.exports = async (knex) => {
         { discipline_group_id: groupId, discipline_id: getDisciplineIdByName('Legislação Ambiental e Políticas Públicas') },
         { discipline_group_id: groupId, discipline_id: getDisciplineIdByName('Macroeconomia') },
         { discipline_group_id: groupId, discipline_id: getDisciplineIdByName('Marketing Estratégico') },
-        { discipline_group_id: groupId, discipline_id: getDisciplineIdByName('Metodologia da Pesquisa e Comunicação Científica') },
+        { discipline_group_id: groupId, discipline_id: getDisciplineIdByName('Metodologia de Pesquisa e Comunicação Científica') },
         { discipline_group_id: groupId, discipline_id: getDisciplineIdByName('Microeconomia') },
         { discipline_group_id: groupId, discipline_id: getDisciplineIdByName('Mudança do Clima e Sociedade') },
         { discipline_group_id: groupId, discipline_id: getDisciplineIdByName('Organização Industrial') },
@@ -42,6 +42,6 @@ module.exports = async (knex) => {
         { discipline_group_id: groupId, discipline_id: getDisciplineIdByName('Tecnologia Social: Práxis e Contra-Hegemonia') },
         { discipline_group_id: groupId, discipline_id: getDisciplineIdByName('Teoria das Finanças') },
         { discipline_group_id: groupId, discipline_id: getDisciplineIdByName('Teorias Administrativas') },
-        { discipline_group_id: groupId, discipline_id: getDisciplineIdByName('Trajetórias da Inovação') }
+        { discipline_group_id: groupId, discipline_id: getDisciplineIdByName('Trajetorias da Inovação') }
     ])
 }
