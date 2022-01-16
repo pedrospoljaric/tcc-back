@@ -14,14 +14,13 @@ module.exports = async (knex) => {
         { discipline_id: getDisciplineIdByName('Álgebra Linear Computacional'), required_discipline_id: getDisciplineIdByName('Cálculo Numérico') },
         { discipline_id: getDisciplineIdByName('Algoritmos e Estruturas de Dados I'), required_discipline_id: getDisciplineIdByName('Lógica de Programação') },
         { discipline_id: getDisciplineIdByName('Algoritmos e Estruturas de Dados II'), required_discipline_id: getDisciplineIdByName('Algoritmos e Estruturas de Dados I') },
-        { discipline_id: getDisciplineIdByName('Algoritmos em Bioinformática'), required_discipline_id: getDisciplineIdByName('Linguagem de Programação') },
         { discipline_id: getDisciplineIdByName('Análise de Sinais'), required_discipline_id: getDisciplineIdByName('Séries e Equações Diferenciais Ordinárias') },
         { discipline_id: getDisciplineIdByName('Arquitetura e Organização de Computadores'), required_discipline_id: getDisciplineIdByName('Circuitos Digitais') },
-        { discipline_id: getDisciplineIdByName('Aprendizado de Máquina e Reconhecimento de Padrões'), required_discipline_id: getDisciplineIdByName('Probabilidade e Estatísti') },
+        { discipline_id: getDisciplineIdByName('Aprendizado de Máquina e Reconhecimento de Padrões'), required_discipline_id: getDisciplineIdByName('Probabilidade e Estatística') },
         { discipline_id: getDisciplineIdByName('Aprendizado de Máquina e Reconhecimento de Padrões'), required_discipline_id: getDisciplineIdByName('Lógica de Programação') },
         { discipline_id: getDisciplineIdByName('Aspectos de implementação de banco de dados'), required_discipline_id: getDisciplineIdByName('Banco de Dados') },
-        { discipline_id: getDisciplineIdByName('Algoritmos em Bioinformática'), required_discipline_id: getDisciplineIdByName('Lógica de Programação') },
         { discipline_id: getDisciplineIdByName('Análise de Investimentos de Riscos'), required_discipline_id: getDisciplineIdByName('Cálculo em Uma Variável') },
+        { discipline_id: getDisciplineIdByName('Algoritmos em Bioinformática'), required_discipline_id: getDisciplineIdByName('Lógica de Programação') },
 
         { discipline_id: getDisciplineIdByName('Banco de Dados'), required_discipline_id: getDisciplineIdByName('Algoritmos e Estruturas de Dados I') },
         { discipline_id: getDisciplineIdByName('Bioinformática Avançada'), required_discipline_id: getDisciplineIdByName('Introdução à Bioinformática') },
@@ -38,11 +37,10 @@ module.exports = async (knex) => {
         { discipline_id: getDisciplineIdByName('Controle de Sistemas Dinâmicos'), required_discipline_id: getDisciplineIdByName('Análise de Sinais') },
         { discipline_id: getDisciplineIdByName('Controle de Sistemas Dinâmicos'), required_discipline_id: getDisciplineIdByName('Circuitos Elétricos II') },
         { discipline_id: getDisciplineIdByName('Computação Gráfica'), required_discipline_id: getDisciplineIdByName('Algoritmos e Estruturas de Dados I') },
-        { discipline_id: getDisciplineIdByName('Computação Bioinspirada'), required_discipline_id: getDisciplineIdByName('Algoritmos e Estrutura de Dados I') },
+        { discipline_id: getDisciplineIdByName('Computação Bioinspirada'), required_discipline_id: getDisciplineIdByName('Algoritmos e Estruturas de Dados I') },
         { discipline_id: getDisciplineIdByName('Códigos Corretores de Erros'), required_discipline_id: getDisciplineIdByName('Álgebra Linear') },
-        { discipline_id: getDisciplineIdByName('Computação Bioinspirada'), required_discipline_id: getDisciplineIdByName('Algoritmo e Estrutura de Dados I') },
 
-        { discipline_id: getDisciplineIdByName('Desenvolvimento de Aplicações Robóticas'), required_discipline_id: getDisciplineIdByName('Algoritmos e Estrutura de Dados I') },
+        { discipline_id: getDisciplineIdByName('Desenvolvimento de Aplicações Robóticas'), required_discipline_id: getDisciplineIdByName('Algoritmos e Estruturas de Dados I') },
 
         { discipline_id: getDisciplineIdByName('Engenharia de Software'), required_discipline_id: getDisciplineIdByName('Programação Orientada a Objetos') },
         { discipline_id: getDisciplineIdByName('Ecologia Avançada'), required_discipline_id: getDisciplineIdByName('Introdução à Ecologia') },
@@ -63,7 +61,7 @@ module.exports = async (knex) => {
         { discipline_id: getDisciplineIdByName('Interação humano- computador'), required_discipline_id: getDisciplineIdByName(' Programação Orientada a Objetos') },
         { discipline_id: getDisciplineIdByName('Inteligência Artificial'), required_discipline_id: getDisciplineIdByName('Algoritmos e Estruturas de Dados I') },
         { discipline_id: getDisciplineIdByName('Introdução a Pesquisa Operacional'), required_discipline_id: getDisciplineIdByName('Álgebra Linear') },
-        { discipline_id: getDisciplineIdByName('Introdução às Redes Neurais Artificiais'), required_discipline_id: getDisciplineIdByName('Algoritmos e Estrutura de Dados I') },
+        { discipline_id: getDisciplineIdByName('Introdução às Redes Neurais Artificiais'), required_discipline_id: getDisciplineIdByName('Algoritmos e Estruturas de Dados I') },
         { discipline_id: getDisciplineIdByName('Introdução à Aeroelasticidade'), required_discipline_id: getDisciplineIdByName('Fenômenos Mecânicos') },
         { discipline_id: getDisciplineIdByName('Introdução à Aeroelasticidade'), required_discipline_id: getDisciplineIdByName('Cálculo Numérico') },
         { discipline_id: getDisciplineIdByName('Introdução à Bioinformática'), required_discipline_id: getDisciplineIdByName('Biologia Molecular da Célula') },
@@ -93,7 +91,7 @@ module.exports = async (knex) => {
         { discipline_id: getDisciplineIdByName('Laboratório de Microbiologia'), required_discipline_id: getDisciplineIdByName('Microbiologia Geral') },
         { discipline_id: getDisciplineIdByName('Laboratório de Engenharia Bioquímica'), required_discipline_id: getDisciplineIdByName('Engenharia Bioquímica I') },
 
-        { discipline_id: getDisciplineIdByName('Multimídia'), required_discipline_id: getDisciplineIdByName('Algoritmos e Estrutura de Dados I') },
+        { discipline_id: getDisciplineIdByName('Multimídia'), required_discipline_id: getDisciplineIdByName('Algoritmos e Estruturas de Dados I') },
         { discipline_id: getDisciplineIdByName('Mecânica Geral'), required_discipline_id: getDisciplineIdByName('Fenômenos Mecânicos') },
         { discipline_id: getDisciplineIdByName('Mecânica Geral'), required_discipline_id: getDisciplineIdByName('Geometria Analítica') },
         { discipline_id: getDisciplineIdByName('Materiais Elétricos'), required_discipline_id: getDisciplineIdByName('Fenômenos Eletromagnéticos') },
@@ -112,7 +110,7 @@ module.exports = async (knex) => {
 
         { discipline_id: getDisciplineIdByName('Paradigmas da Programação'), required_discipline_id: getDisciplineIdByName('Programação Orientada a Objetos') },
         { discipline_id: getDisciplineIdByName('Probabilidade e Estatística'), required_discipline_id: getDisciplineIdByName('Cálculo em Uma Variável') },
-        { discipline_id: getDisciplineIdByName('Processamento de Imagens'), required_discipline_id: getDisciplineIdByName('Algoritmos e Estrutura de Dados I') },
+        { discipline_id: getDisciplineIdByName('Processamento de Imagens'), required_discipline_id: getDisciplineIdByName('Algoritmos e Estruturas de Dados I') },
         { discipline_id: getDisciplineIdByName('Processamento de Imagens'), required_discipline_id: getDisciplineIdByName('Series e Equações Diferenciais') },
         { discipline_id: getDisciplineIdByName('Processamento de Sinais'), required_discipline_id: getDisciplineIdByName('Análise de Sinais') },
         { discipline_id: getDisciplineIdByName('Processamento de Sinais'), required_discipline_id: getDisciplineIdByName('Algoritmos em Bioinformática') },
@@ -133,16 +131,16 @@ module.exports = async (knex) => {
         { discipline_id: getDisciplineIdByName('Simulação de Sistemas'), required_discipline_id: getDisciplineIdByName('Lógica de Programação ') },
         { discipline_id: getDisciplineIdByName('Simulação de Sistemas'), required_discipline_id: getDisciplineIdByName('Probabilidade') },
         { discipline_id: getDisciplineIdByName('Sistemas Distribuídos'), required_discipline_id: getDisciplineIdByName('Sistemas Operacionais') },
-        { discipline_id: getDisciplineIdByName('Sistemas Embarcados'), required_discipline_id: getDisciplineIdByName('Algoritmos e Estrutura de Dados') },
+        { discipline_id: getDisciplineIdByName('Sistemas Embarcados'), required_discipline_id: getDisciplineIdByName('Algoritmos e Estruturas de Dados') },
         { discipline_id: getDisciplineIdByName('Sistemas Embarcados'), required_discipline_id: getDisciplineIdByName('Arquitetura e Organização de Computadores') },
         { discipline_id: getDisciplineIdByName('Sistemas Operacionais'), required_discipline_id: getDisciplineIdByName('Algoritmos e Estruturas de Dados I') },
-        { discipline_id: getDisciplineIdByName('Sistemas Robóticos'), required_discipline_id: getDisciplineIdByName('Algoritmos e Estrutura de Dados I') },
+        { discipline_id: getDisciplineIdByName('Sistemas Robóticos'), required_discipline_id: getDisciplineIdByName('Algoritmos e Estruturas de Dados I') },
         { discipline_id: getDisciplineIdByName('Sistemas Robóticos'), required_discipline_id: getDisciplineIdByName('Fenômenos Mecânicos') },
         { discipline_id: getDisciplineIdByName('Simulação de Sistemas'), required_discipline_id: getDisciplineIdByName('Lógica de Programação') },
         { discipline_id: getDisciplineIdByName('Simulação de Sistemas'), required_discipline_id: getDisciplineIdByName('Probabilidade') },
 
-        { discipline_id: getDisciplineIdByName('Realidade Virtual e Aumentada'), required_discipline_id: getDisciplineIdByName('Algoritmos e Estrutura de Dados I') },
-        { discipline_id: getDisciplineIdByName('Recuperação de Informação Multimídia'), required_discipline_id: getDisciplineIdByName('Algoritmos e Estrutura de Dados I') },
+        { discipline_id: getDisciplineIdByName('Realidade Virtual e Aumentada'), required_discipline_id: getDisciplineIdByName('Algoritmos e Estruturas de Dados I') },
+        { discipline_id: getDisciplineIdByName('Recuperação de Informação Multimídia'), required_discipline_id: getDisciplineIdByName('Algoritmos e Estruturas de Dados I') },
         { discipline_id: getDisciplineIdByName('Redes de Computadores'), required_discipline_id: getDisciplineIdByName('Programação Orientada a Objetos') },
 
         { discipline_id: getDisciplineIdByName('Teoria dos Grafos'), required_discipline_id: getDisciplineIdByName('Projeto e Análise de Algoritmos') },
@@ -156,5 +154,5 @@ module.exports = async (knex) => {
 
         { discipline_id: getDisciplineIdByName('Validação e Verificação de Software'), required_discipline_id: getDisciplineIdByName('Engenharia de Software') }
 
-    ])
+    ]).onConflict(['discipline_id', 'required_discipline_id']).ignore()
 }
