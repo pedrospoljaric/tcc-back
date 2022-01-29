@@ -5,7 +5,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Launch via NPM",
+            "name": "Launch",
             "request": "launch",
             "runtimeArgs": [
                 "run-script",
@@ -19,8 +19,8 @@
             "console": "integratedTerminal"
         },
         {
-            "name": "Launch Program",
-            "program": "${workspaceFolder}/scripts/setCourseDisciplinesDepth.js",
+            "name": "loadInitialData",
+            "program": "${workspaceFolder}/scripts/loadInitialData/index.js",
             "request": "launch",
             "skipFiles": [
                 "<node_internals>/**"

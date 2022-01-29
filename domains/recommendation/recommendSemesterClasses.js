@@ -1,3 +1,5 @@
+/* eslint-disable no-await-in-loop */
+/* eslint-disable no-restricted-syntax */
 const {
     prop, groupBy, orderBy, difference
 } = require('lodash/fp')
@@ -37,9 +39,11 @@ const setGridScore = (grid) => {
     let score = 0
 
     const matrix = Array(6).fill().map(() => Array(6).fill(0))
+    let gridCharge = 0
 
     classes.forEach((currentClass) => {
         (prop('meetingTimes', currentClass) || []).forEach((meetingTime) => {
+            gridCharge += 1
             const dayOfTheWeek = prop('dayOfTheWeek', meetingTime)
             const startTime = prop('startTime', meetingTime)
 
@@ -81,7 +85,7 @@ const setGridScore = (grid) => {
 
     return {
         ...grid,
-        score
+        score: gridCharge ? (score / gridCharge) : 0
     }
 }
 
@@ -117,14 +121,6 @@ module.exports = async ({
     const disciplines = []
 
     const disciplineAmountToPick = 5
-    // Usar preferências do usuário para definir quantas disciplinas selecionar
-    // Definir prioridades de disciplinas (grandes cadeias na sequência são mais importantes)
-    // Usar lista de disciplinas disponíveis no semestre para não acabar selecionando alguma que não está disponível
-
-    // Remover todas que já foram cursadas
-    // Remover todas que possuem pré-requisitos não cumpridos
-    // Adicionar disciplinas atrasadas
-    // Se sobrar espaço, adicionar disciplinas adiantadas
 
     let disciplinesPicked = 0
 
@@ -144,7 +140,70 @@ module.exports = async ({
     const classesByDisciplineId = groupBy('discipline.id', classes)
     const classGroups = Object.values(classesByDisciplineId)
 
-    const possibleGrids = classGroups.length ? permuteArrays(classGroups).map((classGroup) => ({ classes: classGroup })) : []
+    let possibleGrids = classGroups.length ? permuteArrays(classGroups).map((classGroup) => ({ classes: classGroup })) : []
+
+    // Se selecionar menos de "disciplineAmountToPick" disciplinas, adicionar grupos pra completar
+    // Sempre vamos selecionar fixas primeiro, só seleciona grupos se sobrar espaço
+    // if sobrar espaço:
+    //   Consultar grupos necessários para o curso com quantidades (ignorar eletivas livres)
+    //   Verificar quais e quantos grupos o aluno já completou
+    //   Vai sobrar uma quantidade pra fazer de cada grupo. Ex.: { eixo1: 3, eixo2: 0, eixo3: 1 }
+    //   Gerar combinações de todas as UCs dos eixos
+    //   Jogar fora combinações que excedem a quantidade máxima de algum eixo ou que repetem UCs
+    //   Combinar os dois conjuntos de combinações
+
+    if (disciplinesPicked < disciplineAmountToPick) {
+        const courseGroupsFulfilled = await db
+            .select('DGD.discipline_group_id AS groupId', db.raw('COUNT(*)::INTEGER AS amount'))
+            .from('discipline_group_disciplines AS DGD')
+            .whereIn('DGD.discipline_id', fulfilledDisciplinesIds)
+            .groupBy('DGD.discipline_group_id')
+        const fulfilledAmountByGroupId = courseGroupsFulfilled.reduce((acc, cur) => ({ ...acc, [cur.groupId]: cur.amount }), {})
+
+        const courseGroupsAmounts = await db
+            .select('DG.id AS groupId', db.raw('COUNT(*) AS amount'))
+            .from('course_disciplines AS CD')
+            .innerJoin('discipline_groups AS DG', { 'CD.discipline_group_id': 'DG.id' })
+            .where({ 'CD.course_id': courseId })
+            .whereNot({ 'DG.name': 'Eletivas livres' })
+            .groupBy('DG.id')
+        const missingAmountByGroupId = courseGroupsAmounts.reduce((acc, cur) => ({ ...acc, [cur.groupId]: Math.max(0, cur.amount - (fulfilledAmountByGroupId[cur.groupId] || 0)) }), {})
+
+        const groupsIds = Object.keys(missingAmountByGroupId).map(Number)
+        const groupsClasses = []
+        for (const groupId of groupsIds) {
+            const groupPickableDisciplinesIds = await db
+                .pluck('discipline_id')
+                .from('discipline_group_disciplines')
+                .where({ discipline_group_id: groupId })
+                .whereIn('discipline_id', pickableDisciplinesIds)
+
+            const { classes: groupClasses } = await getClasses({ userId, semesterId, disciplinesIds: groupPickableDisciplinesIds })
+
+            groupsClasses.push(...groupClasses.map((groupClass) => ({ ...groupClass, groupId })))
+        }
+
+        const arraysToPermute = Array(disciplineAmountToPick - disciplinesPicked).fill().map(() => groupsClasses)
+        const combinations = permuteArrays(arraysToPermute)
+
+        const combinationsWithMergedClasses = combinations.map((combinationClasses) => Object.values(groupBy('id', combinationClasses)).map((arr) => arr[0]))
+
+        const possibleCombinations = combinationsWithMergedClasses.filter((combinationClasses) => {
+            const classesGroupedByGroupId = groupBy('groupId', combinationClasses)
+            const combinationGroups = Object.keys(classesGroupedByGroupId).map((groupId) => ({ groupId, amount: classesGroupedByGroupId[groupId].length }))
+            const classAmountByGroupId = combinationGroups.reduce((acc, cur) => ({ ...acc, [cur.groupId]: cur.amount }), {})
+
+            const groupsAmountsFit = courseGroupsAmounts.reduce((keep, group) => keep && ((classAmountByGroupId[group.groupId] || 0) <= (missingAmountByGroupId[group.groupId] || 0)), true)
+
+            const classesGroupedByDisciplineId = groupBy('discipline.id', combinationClasses)
+            const hasUniqueDisciplines = Object.keys(classesGroupedByDisciplineId).reduce((keep, disciplineId) => keep && (classesGroupedByDisciplineId[disciplineId].length === 1), true)
+
+            return groupsAmountsFit && hasUniqueDisciplines
+        })
+
+        possibleGrids = permuteArrays([possibleGrids, possibleCombinations]).map(([grid, combination]) => ({ classes: [...grid.classes, ...combination] }))
+    }
+
     const grids = (await Promise.all(possibleGrids.map(async (grid) => {
         try {
             return setGridScore(grid)
