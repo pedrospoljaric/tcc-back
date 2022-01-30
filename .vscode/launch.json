@@ -5,6 +5,16 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "test",
+            "program": "${workspaceFolder}/domains/recommendation/recommendSemesterClasses.js",
+            "request": "launch",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "type": "pwa-node",
+            "console": "integratedTerminal"
+        },
+        {
             "name": "Launch",
             "request": "launch",
             "runtimeArgs": [
