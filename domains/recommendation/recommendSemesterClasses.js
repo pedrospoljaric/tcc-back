@@ -120,7 +120,12 @@ module.exports = async ({
 
     const disciplines = []
 
-    const disciplineAmountToPick = 5
+    const preferences = await db
+        .pluck('preferences')
+        .from('users')
+        .where({ id: userId })
+
+    const disciplineAmountToPick = preferences[0].amount || 5
 
     let disciplinesPicked = 0
 
@@ -204,7 +209,20 @@ module.exports = async ({
         possibleGrids = permuteArrays([possibleGrids, possibleCombinations]).map(([grid, combination]) => ({ classes: [...grid.classes, ...combination] }))
     }
 
-    const grids = (await Promise.all(possibleGrids.map(async (grid) => {
+    const allowedGrids = possibleGrids.filter((grid) => {
+        const turmas = grid.classes
+        let pode = true
+        turmas.forEach((turma) => {
+            turma.meetingTimes.forEach((meet) => {
+                if (!Object.keys(preferences[0].can).find((a) => a === meet.dayOfTheWeek)) {
+                    pode = false
+                }
+            })
+        })
+        return pode
+    })
+
+    const grids = (await Promise.all(allowedGrids.map(async (grid) => {
         try {
             return setGridScore(grid)
         } catch (err) {
