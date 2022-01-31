@@ -19,7 +19,7 @@ module.exports = async ({ username, password }) => {
 
     try {
         browser = await puppeteer.launch({
-            executablePath: 'D:\\Programas(x86)\\Microsoft\\Edge\\Application\\msedge.exe',
+            // executablePath: 'D:\\Programas(x86)\\Microsoft\\Edge\\Application\\msedge.exe',
             args: ['--no-sandbox']
         })
 
