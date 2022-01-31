@@ -209,28 +209,16 @@ module.exports = async ({
         possibleGrids = permuteArrays([possibleGrids, possibleCombinations]).map(([grid, combination]) => ({ classes: [...grid.classes, ...combination] }))
     }
 
-    // const preferences2 = {
-    //     can: {
-    //         1: ['manha', 'tarde', 'noite'],
-    //         // 2: ['manha', 'tarde', 'noite'],
-    //         3: ['manha', 'tarde', 'noite'],
-    //         4: ['manha', 'tarde', 'noite']
-    //         // 5: ['manha', 'tarde', 'noite']
-    //     },
-    //     amount: '3',
-    //     prefer: {
-    //         1: [], 2: [], 3: [], 4: [], 5: []
-    //     }
-    // }
-
     const allowedGrids = possibleGrids.map((grid) => {
         const fixedGrid = { ...grid }
 
         fixedGrid.classes = grid.classes.filter((turma) => {
             let keep = true
             turma.meetingTimes.forEach((meet) => {
-                if (!Object.keys(preferences[0].can).map(Number).find((a) => a === meet.dayOfTheWeek)) {
+                if (!Object.keys(preferences[0].can).filter((day) => preferences[0].can[day].length).map(Number).find((a) => a === meet.dayOfTheWeek)) {
                     keep = false
+                } else {
+                    console.log(alo)
                 }
             })
             return keep
