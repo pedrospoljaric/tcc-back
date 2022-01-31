@@ -146,7 +146,8 @@ module.exports = async ({
         disciplinesPicked += 1
     })
 
-    const { classes } = await getClasses({ userId, semesterId, disciplinesIds: disciplines.map(prop('id')) })
+    const { classes: auxClasses } = await getClasses({ userId, semesterId, disciplinesIds: disciplines.map(prop('id')) })
+    const classes = auxClasses.filter((currentClass) => !!currentClass.meetingTimes)
 
     const classesByDisciplineId = groupBy('discipline.id', classes)
     const classGroups = Object.values(classesByDisciplineId)
