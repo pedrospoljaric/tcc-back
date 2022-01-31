@@ -35,7 +35,7 @@ const startTimeToIndex = {
     '21:00:00': 5
 }
 
-const setGridScore = (grid) => {
+const setGridScore = (grid, preferredMeetingTimesIds, classesWithFriendsIds) => {
     const { classes } = grid
     let score = 0
 
@@ -52,7 +52,11 @@ const setGridScore = (grid) => {
             const timeIndex = startTimeToIndex[startTime]
             if (matrix[dayIndex][timeIndex]) throw new Error('Invalid grid')
             matrix[dayIndex][timeIndex] = 1
+
+            if (preferredMeetingTimesIds.includes(prop('id', meetingTime))) score += 1
         })
+
+        if (classesWithFriendsIds.includes(prop('id', currentClass))) score += 1
     })
 
     for (let i = 0; i < 6; i += 1) {
@@ -91,7 +95,7 @@ const setGridScore = (grid) => {
 }
 
 module.exports = async ({
-    userId = 5, courseId = 2
+    userId, courseId
 }) => {
     const mostRecentSemester = await getMostRecentSemester()
     const semesterId = prop('id', mostRecentSemester)
@@ -149,16 +153,6 @@ module.exports = async ({
 
     let possibleGrids = classGroups.length ? permuteArrays(classGroups).map((classGroup) => ({ classes: classGroup })) : []
 
-    // Se selecionar menos de "disciplineAmountToPick" disciplinas, adicionar grupos pra completar
-    // Sempre vamos selecionar fixas primeiro, só seleciona grupos se sobrar espaço
-    // if sobrar espaço:
-    //   Consultar grupos necessários para o curso com quantidades (ignorar eletivas livres)
-    //   Verificar quais e quantos grupos o aluno já completou
-    //   Vai sobrar uma quantidade pra fazer de cada grupo. Ex.: { eixo1: 3, eixo2: 0, eixo3: 1 }
-    //   Gerar combinações de todas as UCs dos eixos
-    //   Jogar fora combinações que excedem a quantidade máxima de algum eixo ou que repetem UCs
-    //   Combinar os dois conjuntos de combinações
-
     if (disciplinesPicked < disciplineAmountToPick) {
         const courseGroupsFulfilled = await db
             .select('DGD.discipline_group_id AS groupId', db.raw('COUNT(*)::INTEGER AS amount'))
@@ -174,7 +168,7 @@ module.exports = async ({
             .where({ 'CD.course_id': courseId })
             .whereNot({ 'DG.name': 'Eletivas livres' })
             .groupBy('DG.id')
-        const missingAmountByGroupId = courseGroupsAmounts.reduce((acc, cur) => ({ ...acc, [cur.groupId]: Math.max(0, cur.amount - (fulfilledAmountByGroupId[cur.groupId] || 0)) }), {})
+        const missingAmountByGroupId = courseGroupsAmounts.reduce((acc, cur) => (fulfilledAmountByGroupId[cur.groupId] >= cur.amount ? acc : ({ ...acc, [cur.groupId]: Math.max(0, cur.amount - (fulfilledAmountByGroupId[cur.groupId] || 0)) })), {})
 
         const groupsIds = Object.keys(missingAmountByGroupId).map(Number)
         const groupsClasses = []
@@ -208,13 +202,15 @@ module.exports = async ({
             return groupsAmountsFit && hasUniqueDisciplines
         })
 
-        possibleGrids = permuteArrays([possibleGrids, possibleCombinations]).map(([grid, combination]) => ({ classes: [...grid.classes, ...combination] }))
+        if (possibleCombinations.length) {
+            possibleGrids = permuteArrays([possibleGrids, possibleCombinations]).map(([grid, combination]) => ({ classes: [...grid.classes, ...combination] }))
+        }
     }
 
     const existingMeetingTimes = await db('meeting_times')
     const meetingTimesIdsByDayAndTime = existingMeetingTimes.reduce((obj, meetingTime) => ({ ...obj, [`${prop('day_of_the_week', meetingTime)}-${prop('start_time', meetingTime)}`]: prop('id', meetingTime) }), {})
 
-    const meetingTimePreferencesToIds = (preferenceDays) => {
+    const meetingTimePreferencesToIds = (preferenceDays = []) => {
         const days = Object.keys(preferenceDays)
         const meetingTimesIds = []
         days.forEach((day) => {
@@ -238,12 +234,14 @@ module.exports = async ({
         return meetingTimesIds
     }
 
+    const blockedMeetingTimesIds = meetingTimePreferencesToIds(prop('cant', preferences))
+    const preferredMeetingTimesIds = meetingTimePreferencesToIds(prop('prefer', preferences))
+
     const allowedGrids = possibleGrids.map((grid) => {
         const fixedGrid = { ...grid }
 
         fixedGrid.classes = grid.classes.filter((gridClass) => {
-            const gridClassMeetingTimesIds = gridClass.meetingTimes.map(prop('id'))
-            const blockedMeetingTimesIds = meetingTimePreferencesToIds(prop('cant', preferences))
+            const gridClassMeetingTimesIds = (gridClass.meetingTimes || []).map(prop('id'))
 
             if (intersection(gridClassMeetingTimesIds, blockedMeetingTimesIds).length) return false
             return true
@@ -252,9 +250,18 @@ module.exports = async ({
         return fixedGrid
     }).filter((grid) => grid.classes.length)
 
+    const classesWithFriendsIds = await db
+        .pluck('C.id')
+        .from('user_friends AS UF')
+        .innerJoin('student_selected_classes AS SSC', { 'UF.friend_id': 'SSC.student_id' })
+        .innerJoin('classes AS C', { 'SSC.class_id': 'C.id' })
+        .where({ 'UF.user_id': userId })
+        .where({ 'C.semester_id': semesterId })
+        .groupBy('C.id')
+
     const grids = (await Promise.all(allowedGrids.map(async (grid) => {
         try {
-            return setGridScore(grid)
+            return setGridScore(grid, preferredMeetingTimesIds, classesWithFriendsIds)
         } catch (err) {
             return null
         }
