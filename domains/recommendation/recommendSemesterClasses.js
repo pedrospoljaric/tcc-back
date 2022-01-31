@@ -2,7 +2,7 @@
 /* eslint-disable no-await-in-loop */
 /* eslint-disable no-restricted-syntax */
 const {
-    prop, groupBy, orderBy, difference
+    prop, groupBy, orderBy, difference, intersection
 } = require('lodash/fp')
 const db = require('../../database')
 const getClasses = require('../classes/getClasses')
@@ -127,7 +127,7 @@ module.exports = async ({
         .where({ id: userId })
         .first())
 
-    const disciplineAmountToPick = preferences.amount || 5
+    const disciplineAmountToPick = prop('amount', preferences) || 5
 
     let disciplinesPicked = 0
 
@@ -243,9 +243,9 @@ module.exports = async ({
 
         fixedGrid.classes = grid.classes.filter((gridClass) => {
             const gridClassMeetingTimesIds = gridClass.meetingTimes.map(prop('id'))
-            const allowedMeetingTimesIds = meetingTimePreferencesToIds(preferences.can)
+            const blockedMeetingTimesIds = meetingTimePreferencesToIds(prop('cant', preferences))
 
-            if (difference(gridClassMeetingTimesIds, allowedMeetingTimesIds).length) return false
+            if (intersection(gridClassMeetingTimesIds, blockedMeetingTimesIds).length) return false
             return true
         })
 
