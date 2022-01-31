@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 /* eslint-disable no-await-in-loop */
 /* eslint-disable no-restricted-syntax */
 const {
@@ -120,12 +121,13 @@ module.exports = async ({
 
     const disciplines = []
 
-    const preferences = await db
-        .pluck('preferences')
+    const preferences = prop('preferences', await db
+        .select('preferences')
         .from('users')
         .where({ id: userId })
+        .first())
 
-    const disciplineAmountToPick = preferences[0].amount || 5
+    const disciplineAmountToPick = preferences.amount || 5
 
     let disciplinesPicked = 0
 
@@ -209,19 +211,42 @@ module.exports = async ({
         possibleGrids = permuteArrays([possibleGrids, possibleCombinations]).map(([grid, combination]) => ({ classes: [...grid.classes, ...combination] }))
     }
 
+    const existingMeetingTimes = await db('meeting_times')
+    const meetingTimesIdsByDayAndTime = existingMeetingTimes.reduce((obj, meetingTime) => ({ ...obj, [`${prop('day_of_the_week', meetingTime)}-${prop('start_time', meetingTime)}`]: prop('id', meetingTime) }), {})
+
+    const meetingTimePreferencesToIds = (preferenceDays) => {
+        const days = Object.keys(preferenceDays)
+        const meetingTimesIds = []
+        days.forEach((day) => {
+            preferenceDays[day].forEach((period) => {
+                const firstTime = period === 'manha' ? '08:00:00'
+                    : period === 'tarde' ? '13:30:00'
+                        : period === 'noite' ? '19:00:00'
+                            : null
+
+                const secondTIme = period === 'manha' ? '10:00:00'
+                    : period === 'tarde' ? '15:30:00'
+                        : period === 'noite' ? '21:00:00'
+                            : null
+
+                meetingTimesIds.push(...[
+                    meetingTimesIdsByDayAndTime[`${day}-${firstTime}`],
+                    meetingTimesIdsByDayAndTime[`${day}-${secondTIme}`]
+                ])
+            })
+        })
+        return meetingTimesIds
+    }
+
     const allowedGrids = possibleGrids.map((grid) => {
         const fixedGrid = { ...grid }
 
-        fixedGrid.classes = grid.classes.filter((turma) => {
-            let keep = true
-            turma.meetingTimes.forEach((meet) => {
-                if (!Object.keys(preferences[0].can).filter((day) => preferences[0].can[day].length).map(Number).find((a) => a === meet.dayOfTheWeek)) {
-                    keep = false
-                } else {
-                    console.log(alo)
-                }
-            })
-            return keep
+        fixedGrid.classes = grid.classes.filter((gridClass) => {
+            const gridClassMeetingTimesIds = gridClass.meetingTimes.map(prop('id'))
+            const allowedMeetingTimesIds = meetingTimePreferencesToIds(preferences.can)
+
+            if (difference(gridClassMeetingTimesIds, allowedMeetingTimesIds).length) return false
+            return true
         })
 
         return fixedGrid
