@@ -131,7 +131,7 @@ module.exports = async ({
         .where({ id: userId })
         .first())
 
-    const disciplineAmountToPick = prop('amount', preferences) || 5
+    const disciplineAmountToPick = Number(prop('amount', preferences) || 5)
 
     let disciplinesPicked = 0
 
