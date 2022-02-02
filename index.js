@@ -13,7 +13,11 @@ const PORT = process.env.PORT || 1234
 
 app
     .use(respond())
-    .use(cors({ origin: '*' }))
+    .use(cors({
+        origin: '*',
+        methods: ['POST', 'GET', 'PATCH', 'DELETE', 'OPTIONS'],
+        allowedHeaders: ['Content-Type', 'Authorization']
+    }))
     .use(bodyParser(({ formLimit: '10mb', jsonLimit: '10mb', urlencoded: { extended: true } })))
     .use(mount('/api', routes))
 
