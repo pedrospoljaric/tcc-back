@@ -152,7 +152,8 @@ module.exports = async ({
     const classesByDisciplineId = groupBy('discipline.id', classes)
     const classGroups = Object.values(classesByDisciplineId)
 
-    let possibleGrids = classGroups.length ? permuteArrays(classGroups).map((classGroup) => ({ classes: classGroup })) : []
+    const possiblePermutations = permuteArrays(classGroups.map((classGroup) => [null, ...classGroup])).filter((a) => !!a.filter(Boolean).length)
+    let possibleGrids = classGroups.length ? possiblePermutations.map((classGroup) => ({ classes: classGroup.filter(Boolean) })) : []
 
     if (disciplinesPicked < disciplineAmountToPick) {
         const courseGroupsFulfilled = await db
