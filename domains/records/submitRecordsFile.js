@@ -36,11 +36,20 @@ module.exports = async ({ userId, file }) => {
     const classStudents = []
     await db.transaction(async (trx) => {
         if (courseName.includes('ENGENHARIA DE COMPUTAÇÃO')) {
-            const computerEngineeringCouse = await db('courses').where({ name: 'Engenharia de Computação' }).first()
+            const computerEngineeringCourse = await db('courses').where({ name: 'Engenharia de Computação' }).first()
 
             await trx
                 .table('course_students')
-                .insert({ course_id: prop('id', computerEngineeringCouse), student_id: userId })
+                .insert({ course_id: prop('id', computerEngineeringCourse), student_id: userId })
+                .onConflict(['course_id', 'student_id'])
+                .ignore()
+        }
+        if (courseName.includes('CIÊNCIA DA COMPUTAÇÃO')) {
+            const computerScienceCourse = await db('courses').where({ name: 'Ciência da Computação' }).first()
+
+            await trx
+                .table('course_students')
+                .insert({ course_id: prop('id', computerScienceCourse), student_id: userId })
                 .onConflict(['course_id', 'student_id'])
                 .ignore()
         }
